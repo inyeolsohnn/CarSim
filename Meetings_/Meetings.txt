@@ -1,0 +1,98 @@
+Date: 19/01/2015
+Attendance: & Mark, Inyeol, Qiu, Jie, Tanda  
+Duration: 1 Hour
+Agenda: Get to know the other group members, state aim for project, think of ways to develop project and decide which days are best for meetings.
+Outcome:Each member is to develop some ideas for how initial design of system and look into using JavaScript and PHP and as a means of programming. 
+				
+
+Date: 23/01/2015 (1pm)
+Attendance: Inyeol, Tanda, Jie, Qiu 
+Duration: 1 Hour
+Agenda: Follow on discussion from previous meeting about how the system should be designed, as well as discuss the aim.
+Outcome: Inyeol presented group with a UML diagram of a potential system and discussion is raised into changing the programming language to Java. 
+				
+Date: 26/01/2015 (1pm)
+Attendance: Mark, Inyeol, Yun, Jie, Tanda
+Duration: 1 hour 20 minutes
+Agenda:  Finalise discussion on the project system and programming language that is going to be used.
+Outcome: Java chosen as programming language and tasks set for each member to complete a section for the first assessment.
+          
+Date: 28/01/2015 (1 hour)
+Attendance: Inyeol, Yun, Tanda, Jie
+Duration: 1 hour 
+Agenda: Looking at different techniques for road development. 
+Outcome:  Discussion on road technique and ensure people are working on tasks during Mondays meeting for the first assessment. 
+          
+Meeting 5
+Date:30/01/2015 (1pm) 
+Attendance: Jie, Qiu, Inyeol, Mark, Tanda 
+Duration: 1 hour 15 minutes
+Agenda: Finalise initial report and continue with discussions on road development.
+Outcome: Qiu to complete section for the initial report. Good discussion about road development continues, those confident with programming should continue developing a small example to present to all for a better understanding of programming and those less confident with programming should continue looking at the mathematical aspects behind road development.
+
+Meeting 6
+Date:  02/02/2015 (3pm)
+Attendance: Jie and Tanda 
+Duration: 30 minutes
+Outcome: Discussion and review of the initial report and what can be done by other members to make it better. Jie described the code he had been working on for the system and the continued development into 
+
+Meeting 7
+Date: 06/02/2015 (1pm) 
+Attendance: Mark, Jie, Tanda, Qiu (Inyeol Pardoned)
+Duration: 45 minutes
+Agenda: Editing the Initial Report and getting more contribution from group members for first section and brief talk on presentation and get the prototype on Github.
+Outcome: Jie illustrated to the group a prototype and has explained the code together. Tanda and Jie had discussion about the GUI of the simulation and how to present the visualisation better shall be worked on by all group members. Mark assigned task to create presentation
+
+Meeting 8
+Date: 09/02/2015 (3pm) 
+Attendance: Mark, Qiu, Inyeol, Jie, Tanda 
+Duration:  40 minutes
+Agenda: Initial Report feedback for submission next day, discuss prototype and preparations for presentation and road development. 
+Outcome: Finalising presentation as a group and discussion of the prototype.
+					
+Meeting 9
+Date:  13/02/2015 (1pm)
+Attendance:  Jie, Mark, Tanda
+Duration:  1 hour (Tanda and Jie) 10 minutes (Mark)
+Agenda: Make sure there is contribution to the Github from all members, final report and progression with implementation. Lead programmers need to distribute tasks. road development. Begin looking into the way we shall work together as a team despite some members not being the strongest programmers find a way to keep them actively involved as issues that arose from the feedback given by lecturer should be addressed and taken care of for the final report 
+Outcome: Jie and Tanda going to work on system T Junction that can be used for all members to be presented on Monday 
+
+Meeting 10
+Date:  16/02/2015 (3pm)
+Attendance: Tanda, Jie, Inyeol, Qiu, Mark
+Duration: 2 hours 
+Agenda:Make sure there is contribution to the Github from all members, final report and progression with implementation.
+Outcome: & Defining road sizes, Continuing with traffic light development. Defined and finalised the road design. Must have a basic application done to analyse for Friday meeting. Lead programmers need to discuss more with group about the implementation
+					
+Meeting 11
+Date: 20/02/2015 (1pm)
+Attendance: Jie, Tanda, Qiu, Inyeol
+Duration:  1 Hour
+Agenda: Finalise the structure of the Traffic Simulation, Finalise the user manual and continue distributing Final report sections to be completed as drafts.
+Outcome: Qiu and Jie shall work on Line equation solver (due Monday) Inyeol continues programming on road development and Tanda discussed final report skeleton with Qiu.
+
+Meeting 12
+Date: 23/02/2015 (1pm)
+Attendance: Jie, Inyeol, Mark, Qiu, Tanda
+Duration: 45 minutes
+Agenda: Project coordinator (Tanda) distribute final report tasks among system analysts (Qiu and Mark) and discussion on road development with programmers.
+Outcome: Final report tasks distributed among Qiu, Mark and Tanda for Fridays meeting to look over. Inyeol and Jie discussed concerns and issues with system and are continuing to work on road development in terms of 'Lane connectors'. Based on project plan the group is still on track for the 27th for road development to be completed. Traffic Light object prototype created by Jie shall be worked on to be finalised and introduced in the system.
+    
+Meeting 13
+Date:  27/02/2015 (1pm)
+Attendance: Mark, Inyeol, Tanda, Jie, Qiu
+Duration:1 hour 30 minutes
+Agenda:Tanda shall ensure that Mark and Qiu are able to add their contributions constantly to the latex document on Github. Finalise the Pixel --> meters representation issue.
+Outcome:  Qiu and Mark know how to add to the final report via Github and continuing to actively work on the report. Inyeol, Jie and Tanda working together to begin developing the View. The Traffic Light prototype created by Tanda and Jie needs to be adjusted to suit the final system.
+      
+Meeting 14
+Date: 06/03/2015 (1pm)
+Attendance: Mark, Qiu, Inyeol, Jie, Tanda 
+Duration: 30 Minutes
+Agenda: Enforce the contribution from system analyst to the final report and discuss previous deadline set out for the report. Programmers present the progression of the system and how the view is coming along.
+Outcome: On Monday should have a more complete introduction, requirements and related work section, programming of the view should have progressed.
+			
+Meeting 15
+Date: 11/03/2015 (1pm)
+Agenda: Discuss what is the current progression being done in both the programming and the final report. Address what is outstanding and how it can be approached with the approaching deadline especially if anything is crucial is currently missing.
+Outcome: 

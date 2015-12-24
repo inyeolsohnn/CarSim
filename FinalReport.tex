@@ -1,0 +1,345 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,pdftex]{geometry}	% Use A4 paper margins
+\usepackage[english]{babel}
+\usepackage{xcolor,enumitem} 
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{array} % for m[{x cm} in tables
+
+\begin{document}
+	\begin{titlepage} %TITLE PAGE
+	\center
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 
+\includegraphics[scale=0.2]{kingslogo}\\
+\HRule \\[0.4cm]
+{ \huge \bfseries Final Report}\\[0.4cm] % Title
+	\ Team NERD
+\HRule \\[1.5cm]
+{\large \today}\\[10cm] 
+	
+
+\begin{minipage}{0.4\textwidth}
+	\begin{flushleft} \large
+		\emph{Authors:}\\
+			Mark Azer 1271398/1\\
+			Jie Ding 1412858/2 \\
+			Tanda Kabanda 1472443/1 \\
+			Inyeol Sohn 1466384/1 \\
+			Qiu Yun 1430295/1 \\
+	\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+	\begin{flushright} \large
+		\emph{Lecturer:} \\
+		Dr. Laurence Tratt
+	\end{flushright}
+\end{minipage}\\[4cm]
+	
+	\end{titlepage}
+	\tableofcontents
+	\newpage
+	\section{Introduction} %Introduce project and aim 
+	%Describe the context for the work and the problem you are addressing. Briely summarise what you achieved in the project
+Working together as a team NERD the aim of this project was to succsessful develop a traffic simulation system. The intention of this report is to present and demonstrate the progression, development and overall outcome of the Traffic Simulation application created and how our approach compares to the simulators currently avaliable. 
+Roads exist and at time can not be changed or model to suit the intetion, what needs to happen is for 'reearchs' to find the most optimal way to use traffic lights to support the flow of cars efficelty, this is our aim for the project and the concept we will be working towards through this project. 
+The report is structured into 11 sections, each with a purpose to provide further understanding into the steps taken throughout the project as a whole. 
+	\\ This first section is an introduction to the whole project and provides an understanding of what is to be expected throughout the entire report. The second section discusses the requirements needed for the project to be deemed successful and appropriate for the cause to fit what is needed. Section three looking into the different existing systems and how the system we are developing is different and any challenges brought about based upon what exists already. Section four discusses the system design including a user manual. In the fifth section of the report is discussion on the process of the actual implementation completed by the two main programmers in the team, which includes how prototypes were created and developed into the final application, as well as some discussion on any system design changes that happened. In the sixth section is a full technical evaluation of the system including the methods used to test the system. In the seventh section is a group evaluation of how the team has been organized throughout the project and then a discussion about the work load division, this section should give a clear insight into the team work throughout project. The eighth section of the report is a conclusion of the project as a whole specifically looking at the lessons learned about program development, what we learnt from about group work and lastly how we would progress in the future with the project. The tenth section is simply the bibliography references to sources we used throughout the report and lastly the eleventh section is the appendices of all additional relevant documents such as a group meetings, personal logs, project plans and documents that supported the system design of the application.\\
+	
+	Overall, this introduction should outline what is to be expected throughout the entire and give insight into how the group worked together to successfully create a traffic simulation.
+	
+	\subsection{Scope}%Need help here please.
+	
+	\subsection{Objectives} %Making The Map - More maps addtional stuff
+	The aim of the project was to build an application which will simulate cars movement on the UK road system. The users aim is to be able to find the perfect balance of (word here). If a road system is created using the application where the traffic light system is illogical, for example the wrong traffic light position or wrong traffic light interval this will result in a crash or unfair waiting time.
+	%More needs to be added
+	The value of this system is to provide an effective system to simulate traffic to ensure that drivers have an good road network which is fair to all drivers making sure they are able to get to their destinations. 
+	%What we have achieved ...
+	
+	These objectives were set as a group at the beginning to the project the reports will continue to illustrated you how we reached these objectives together a group and the final outcome of the traffic simulation system.
+	
+	\section{Requirements} %What is needed for the project to be succesful 
+	Our purpose is to develop the traffic simulator related to real traffic system and user requirement . Traffic simulation is a well-established field with several ways to achieve it and gain different feedback.           Considering the group work project as well as peer assessment, we made a initial plan at very beginning quickly based on each member’s specific ability and individual background. After our first meeting, we separate the project with schedules according to agile software development principles. It can be generally described as follow \\
+	\begin{enumerate}[noitemsep]
+\item Initiation, analysis and risk management related to requirements that define our project and work to do.  In this case, we need to build a traffic simulate software our own which can also conveniently collect some user requirement and then generate feedback. To be more specific, it means a general map with at least simple straight roads, round roads, cross roads as well as traffic lights and so on.\\
+\item Planning , containing the schedule and priorization of work.
+As our consideration, the round road may be the most difficult and complex part in this project. So we decide to solve this part first while trying to implement crossroads with traffic lights to determine car movements, then the combination of several kinds of roads after complete each part of them successfully. \\ 
+\item Development, including designing the scope which we need to keep track to, and implementation, porting with verification of each units to make sure the correction and integrating after that. If it can goes well so far, then perform corrective improvement towards the whole system to check all the function.\\
+\item Deliver the product and final report, which may go through with the progress at first to record everything we need then generate the final paper about our group work software and make peer assessment in this case as needed.
+	\end{enumerate}
+After setting our first plan.
+
+\section{Related Work} %Examples of systems and dicussion of them compared to what we are creating.
+	
+	\textbf{History:} 
+in the past years traffic simulation models played a very important role in the performance and facilities of the road traffic. the simulation traffic models can be used in many road development process.
+Only in the United Kingdom vehicle traffic has been in a rise to 2.1 per cent comparing to the previous year 2014, the government figures shown that 310.2 billions miles for the travelled vehicles in all the road in the United Kingdom only in year 2014.  
+Some initial government reports shows that the increased traffic raised in a four areas like services, manufacturing, production and construction. only in year 2014, that was a growth comparing to the previous year 2013.
+
+U.K Traffic Congestion 
+
+Traffic congestion has been always a big problem on the roads of many countries, almost the whole world. 
+
+
+	\textbf{Current:} 
+The current technologies has considered many aspects like ;
+
+speed: the street maximum speed, speed between cars. 
+overtake: How many lanes, overtake allowed or not.
+Restrictions: whether route restrictions or changing lanes 
+Traffic Flow control: for ramps and round about, and any intersection.
+
+But the nobody has brought any idea about if the traffic flow has increased or any future upgrade like connecting the current roads with a new route. the new system should have these important strategies to help improve congestion 
+Measuring Traffic Flow: many researchers have been trying to find a good ways of measuring traffic flows as it’s very important because if we able to measure the traffic flow that would be very useful and would enable us to predict any traffic congestion and how to avoid it and find another routes. 
+	\section{System Design} %All the design things completed before like usecase blah blah etc..
+	\subsection{User Manual}% How it works with the user
+	\section{Implementation} %Above sections can be completed for now when it gets to implementation contribution from programmers will be needed
+This section of the of the report shall dicuss the implementation of the car simulation, it will begin dicussing the initial prototypes that were developed and a tehncical dicussion of the final implmented system. 
+	\subsection{Prototype Initial Development}
+This section shall present the initial prototype implementation steps taken to create our applicatin. As mentioned the group was very cauious about the the complexity of the road development therefore this was an issue during implementation we wanted to deal with first.  
+	%Protypes developed first then modelled into correct OOP -- most signficant concern was road developement - mention plan. 
+As dicussed within the requirments section of the report we used an aigle development process before dicussing how the final implementation its important to illustrate the three protoypes of road development we created. This was done because after udnerstanding the general requirements for the proejcto to be successful we found that road development was our main concern therefore approached the project by taking the most essential aspect to the system are the roads. Therefore one of the programmers worked on developmenting quick prototypes which as a group we dicussed and then moved on to final developments.\\
+Our first concern was the roundabout prototype...\\
+Using Java Graphics (word here) we simply drew different road, car and traffic light models, from these models the programmers then worked to turn them into acutal java objects. 
+%TO BE EDDITED
+%Image of the system here
+The most complex road model we dicussed would be a roundabout, the model needs to be created by several parameters: Center Point coordination, the radius and the numbers of roundabout lanes (which express how many inner circles are in the roundabout road). For the movement on the roundabout road, we calculate the next position coordination of the car by the changes of angle with this simply then repaint the car all the time.
+The simplistic concern \\
+Choose the rectangle to present a single car model. Using graphics. drawPolygon rather than graphics.drawRect to draw a rectangle, since cars have multiple moving choices such as going straight or turning direction (which means rotating in our system). Hence, we use four points coordination to draw a car model instead of the width and length.
+%Image of the system here
+Our third concern of basic traffic light developmenet...\\
+The traffic light would be painted and assigned by several parameters: the lane it belongs, the current color, the green interval, the red interval and the coordination of the traffic light. The interval may be modified by users interfaces provided by the system.
+%Image of the system here
+\\
+Following on from this section, shall continue to dicuss the final implemention fo the system based and how these prototypes were able to aid it..
+	\subsection{Final Development}
+	\textbf{Road Development}\\
+	%Talk about the three types of roads -- Straight, Curve, Roundabout.
+	\textbf{Traffic Light}\\
+	update is executed every 0.02 times 
+	check current status
+	each traffic light has a status - check each interval 
+	traffic light object -- \\
+	\textbf{Car Development}\\
+	To truly be able to model an efficient traffic simulation system its important to ensure that cars are developed to have realistic car movement behaviour. For example, in many applications cars may simply stop when it approaches a traffic light but in reality when a car approaches a traffic light it should decelerate. On the CSGNetworks website on Vehicle Stopping Distance And Time \cite{CSGNetwork} states that 'The intelligent driver will error on the safe side and leave room for reaction time and less than perfect conditions. That driver will also hone the braking skills to give more of a margin of safety. That margin can save lives.' These margins were implemented by calculating....(ADD HERE -- SHOW CALCULATION)
+
+	Overall, I hope this section has been able to demonstrate all the technical steps taken into the creation of the simulation. 
+	
+	\subsection{System Design Changes}
+	An important aspect of the traffic simulator is how it appears to the user, the graphical user interface (GUI) and as a requirement users of the application should be able to interact with it. When designing when discussing how the application should be presented to the user.
+	
+	A number of user interface initial designs were developed and discussed as a group taking into consideration principles and guidelines for good user interface design as noted by Donald \cite{Norman} (2002) aspects such as consistency, visibility and mapping, all important for the usability of a system. The appearance of the application is important however the usability and ease of use of the system is as just as important.
+	\begin{figure}[h]
+	\caption{Initial GUI Structure}
+	\label{initialGUI}
+	\end{figure}
+	
+	\begin{figure}[h]
+	\caption{Final GUI Structure}
+	\label{finalGUI}
+	\end{figure}
+	Figure~\ref{initialGUI} illustrates the first prototype design of the system and Figure~\ref{finalGUI} illustrates how from the prototype the system design changed to utilize space for efficiently and usability better. 
+	Initially we thought we may not need a lot of space for control panel but through discussion and prototype developments we changed the control panel from being at the bottom of the screen to the left. 
+	
+	\section{Evaluation} %Technical Evaluation of the system
+	%Include a comparsion table for what our system can do compared to one metioned in related work
+	\subsection{Testing} %How we tested the program (e.g Black/White Box)
+	\section{Group Dicussion}
+	\subsection{Team Organisation} %How each member contributed to the project and how the workload was divided 
+	Effective team organisation was essential to the success of the project. This section shall outline how each member contributed to the project and how the workload was divided among the members. \\
+	After initial planning and understanding of the project about the project we began to have discussions about the roles of each member and how they could contribute. This lead to the group being split into two teams. The first team are the programmers, Inyeol and Jie were the most experienced and most comfortable programmers. Jie would develop prototypes which Inyeol would then develop into object orientated programming, this process worked well because as prototypes were developed early and presented to all group members we were all up to date with the progress of the implementation of the system and make changes and alterations when need be. \\
+The second team was Tanda, Qiu and Mark working as system analysts in charge of all documentation and research. Tanda as project coordinator worked to ensure that these two teams although separate would remain in constant communication during meetings or online. Thus meaning that system analysts would always know the progress of the programmers and with this be able to understand what the programmers are doing to write the final report . \\
+	\textbf{Work Load Division:}\\ 
+	The work load...
+	
+	We hope this section has given evidence of the contribution of each member of the group and showed how we worked together to complete the project. 
+	\section{Conclusion} % on the project
+	\subsection{Lessons Learned} 
+	\textbf{Program Development Lessons Learned:}\\ %Dicussion on the implementation
+	
+	\textbf{Group Work Lessons Learned:}\\ %What we learnt about group work and working together
+	During the project as a group we learnt that...%for example despite each member have a defined role, there needs to be a lot of communication between all members to ensure that. 
+	\subsection{Future Work} %How the project could be extended
+	\section{References}
+	
+	\begin{thebibliography}{9}
+			\bibitem{Norman} Norman, Donald. \emph{The Design of Everyday Things} (2002) Basic Books
+			\bibitem{CSGNetwork}Computer Support Group (CSGNetwork), Inc. \emph{Vehicle Stopping Distance And Time} (2015) http://www.csgnetwork.com/stopdistinfo.html
+	\end{thebibliography}
+	
+
+	\section{Appendices} % ALL THE EXTRA STUFF.
+	\subsection{Meeting Diaries} %Meeting Minutes kept and updated by project coordinator (Tanda)
+			\begin{tabular}{|m{2cm}|m{12cm}|}
+				\hline
+				\multicolumn{2}{ |l|}{ \textbf{Meeting 1}} \\  \hline
+				Date: & 19/01/2015 \\  \hline
+				Attendance: & Mark, Inyeol, Qiu, Jie, Tanda  \\   \hline
+				Duration: & 1 Hour \\  \hline
+				Agenda: & Get to know the other group members, state aim for project, think of ways to develop project and decide which days are best for meetings.\\  \hline
+				Outcome: &  Each member is to develop some ideas for how initial design of system and look into using JavaScript and PHP and as a means of programming. \\  \hline
+		
+				\multicolumn{2}{ c}{} \\
+				\hline
+				\multicolumn{2}{ |l|}{ \textbf{Meeting 2}} \\  \hline
+				Date: & 23/01/2015 (1pm)  \\  \hline
+				Attendance: & Inyeol, Tanda, Yun, Qiu  \\   \hline
+				Duration: & 1 Hour \\  \hline
+				Agenda: & Follow on discussion from previous meeting about how the system should be designed, aswell as dicuss the aim. \\ \hline
+				Outcome: &  Inyeol presented group with a UML diagram of a potential system and discussion is raised into changing the programming language to Java. \\  \hline
+				
+				\multicolumn{2}{ c}{} \\
+				\hline
+				\multicolumn{2}{ |l|}{ \textbf{Meeting 3}} \\  \hline
+				Date: & 26/01/2015 (1pm)  \\  \hline
+				Attendance: & Mark, Inyeol, Yun, Jie, Tanda  \\   \hline
+				Duration: & 1 hour 20 minutes  \\  \hline
+				Agenda: & Finalise discussion on the project system and programming
+				language that is going to be used.  \\ \hline
+				Outcome: &  Java chosen as programming language and tasks set for each
+				member to complete a section for the first assessment. \\  \hline
+				\multicolumn{2}{ c}{} \\
+				 \hline
+				 \multicolumn{2}{ |l|}{ \textbf{Meeting 4}} \\  \hline
+				 Date: & 28/01/2015 (1 hour) \\  \hline
+				 Attendance: & Inyeol, Yun, Tanda, Jie  \\   \hline
+				 Duration: & 1 hour  \\  \hline
+				 Agenda: & Looking at different techniques for road development. \\ \hline
+				 Outcome: &  Discussion on road technique and ensure people are working
+				 on tasks during Mondays meeting for the first assessment. \\  \hline
+			\end{tabular}
+			
+			\begin{tabular}{|m{2cm}|m{12cm}|}
+				\hline
+				  \multicolumn{2}{|l|}{ \textbf{Meeting 5}} \\  \hline
+				  Date: & 30/01/2015 (1pm) \\  \hline
+				  Attendance: & Jie, Qiu, Inyeol, Mark, Tanda  \\   \hline
+				  Duration: & 1 hour 15 minutes  \\  \hline
+				  Agenda: & Finalise initial report and continue with discussions on
+				  road development. \\ \hline
+				  Outcome: &  Qiu to complete section for the initial report. Good
+				  discussion about road development continues, those confident
+				  with programming should continue developing a small example
+				  to present to all for a better understanding of programming
+				  and those less confident with programming should continue
+				  looking at the mathematical aspects behind road development. \\ \hline
+				  \multicolumn{2}{ c}{} \\
+				  \hline
+				  \multicolumn{2}{ |l|}{ \textbf{Meeting 6}} \\  \hline
+				  Date: & 02/02/2015 (3pm) \\  \hline
+				  Attendance: & Jie and Tanda \\   \hline
+				  Duration: & 30 minutes \\  \hline
+				  Agenda: &  \\ \hline
+				  Outcome: & Discussion and review of the initial report and what can be done by other members to make it better. Jie described the code he had been working on for the system and the continued development into  \\  \hline
+				  \multicolumn{2}{ c}{} \\
+				  \hline
+				  \multicolumn{2}{ |l|}{ \textbf{Meeting 7}} \\  \hline
+				  Date: & 06/02/2015 (1pm) \\  \hline
+				  Attendance: & Mark, Jie, Tanda, Qiu (Inyeol Pardoned)\\   \hline
+				  Duration: &  45 minutes\\  \hline
+				  Agenda: & Editing the Initial Report and getting more contribution from group members for first section and brief talk on presentation and get the prototype on Github. \\ \hline
+				  Outcome: &  Jie illustrated to the group a prototype and has explained the code together. Tanda and Jie had discussion about the GUI of the simulation and how to present the visualisation better shall be worked on by all group members. Mark assigned task to create presentation \\
+				  \hline 
+				  \multicolumn{2}{ c}{} \\
+				    \hline 
+					\multicolumn{2}{ |l|}{ \textbf{Meeting 8}} \\  \hline
+					Date: & 09/02/2015 (3pm) \\  \hline
+					Attendance: & Mark, Qiu, Inyeol, Jie, Tanda \\   \hline
+					Duration: &  40 minutes \\  \hline
+					Agenda: & Initial Report feedback for submission next day, discuss prototype and preparations for presentation
+					road development. \\ \hline
+					Outcome: & Finalising presentation as a group and discussion of the prototype.   \\  \hline
+				\end{tabular}
+		
+			
+				\begin{tabular}{|m{2cm}|m{12cm}|}
+					\hline
+					\multicolumn{2}{ |l|}{ \textbf{Meeting 9}} \\  \hline
+					Date: & 13/02/2015 (1pm) \\  \hline
+					Attendance: & Jie, Mark, Tanda\\   \hline
+					Duration: & 1 hour (Tand and Jie) 10 minutes (Mark)  \\  \hline
+					Agenda: & Make sure there is contribution to the Github from all members, final report and progression with implementation. Lead programmers need to distribute tasks.
+					road development. Begin looking into the way we shall work together as a team despite some members not being the strongest programmers find a way to keep them actively involved as issues that arose from the feedback given by lecturer should be addressed and taken care of for the final report \\ \hline
+					Outcome: & Jie and Tanda going to work on system T Junction that can be used for all members to be presented on Monday \\  \hline
+					\multicolumn{2}{ c}{} \\
+					\hline
+					\multicolumn{2}{ |l|}{ \textbf{Meeting 10}} \\  \hline
+					Date: & 16/02/2015 (3pm) \\  \hline
+					Attendance: & Tanda, Jie, Inyeol, Qiu, Mark\\   \hline
+					Duration: &  2 hours \\  \hline
+					Agenda: & Make sure there is contribution to the Github from all members, final report and progression with implementation. \\  \hline
+					Outcome: & Defining road sizes, Continuing with traffic light development. Defined and finalised the road design. Must have a basic application done to anaylse for Friday meeting. Lead programmers need to dicuss more with group about the implementation\\  \hline
+				\multicolumn{2}{ c}{} \\
+			\hline
+			\multicolumn{2}{ |l|}{ \textbf{Meeting 11}} \\  \hline
+			Date: & 20/02/2015 (1pm) \\  \hline
+			Attendance: & Jie, Tanda, Qiu, Inyeol\\ \hline
+			Duration: &  1 Hour \\  \hline
+			Agenda: & Finalise the structure of the Traffic Simulation, Finalise the user manual and continue distributing Final report sections to be completed as drafts.  \\ \hline
+			Outcome: & Qiu and Jie shall work on Line equation solver (due Monday) Inyeol continues programming on road development and Tanda discussed final report skeleton with Qiu.   \\  \hline
+		\end{tabular}
+
+		\begin{tabular}{|m{2cm}|m{12cm}|}
+			\hline
+			\multicolumn{2}{ |l|}{ \textbf{Meeting 12}} \\  \hline
+			Date: & 23/02/2015 (1pm) \\  \hline
+			Attendance: & Jie, Inyeol, Mark, Qiu, Tanda \\ \hline
+			Duration: &  45 minutes\\  \hline
+			Agenda: & Project coordinator (Tanda) distribute final report tasks among system analysts (Qiu and Mark) and discussion on road development with programmers.\\ \hline
+			Outcome: & Final report tasks distributed among Qiu, Mark and Tanda for Fridays meeting to look over. Inyeol and Jie discussed concerns and issues with system and are continuing to work on road development in terms of 'Lane connectors'. Based on project plan the group is still on track for the 27th for road development to be completed. Traffic Light object prototype created by Jie shall be worked on to be finalised and introduced in the system.\\  \hline
+			\multicolumn{2}{ c}{} \\
+			\hline
+			\multicolumn{2}{ |l|}{ \textbf{Meeting 14}} \\  \hline
+			Date: & 27/02/2015 (1pm) \\  \hline
+			Attendance: & Mark, Inyeol, Tanda, Jie, Qiu\\ \hline
+			Duration: &  1 hour 30 minutes\\  \hline
+			Agenda: & Tanda shall ensure that Mark and Qiu are able to add their contributions constantly to the latex document on Github. Finalise the Pixel --> meters representation issue.\\ \hline
+			Outcome: & Qiu and Mark know how to add to the final report via Github and continuing to actively work on the report. Inyeol, Jie and Tanda working together to begin developing the View. The Traffic Light prototype created by Tanda and Jie needs to be adjusted to suit the final system. \\  \hline
+			\multicolumn{2}{ c}{} \\
+			\hline
+			\multicolumn{2}{ |l|}{ \textbf{Meeting 16}} \\  \hline
+			Date: & 06/03/2015 (1pm) \\  \hline
+			Attendance: & Mark, Qiu, Inyeol, Jie, Tanda \\ \hline
+			Duration: &  30 Minutes\\  \hline
+			Agenda: & Enforce the contribution from system anaylst to the final report and dicuss previous deadline set out for the report. Programmers present the progression of the system and how the view is coming along. \\ \hline
+			Outcome: & On Monday should have a more complete introduction, requirments and related work section, programming of the view should have progressed.\\  \hline
+			\hline
+			\multicolumn{2}{ |l|}{ \textbf{Meeting 17}} \\  \hline
+			Date: & 02/03/2015 (3pm) \\  \hline
+			Attendance: & \\ \hline
+			Duration: &  \\  \hline
+			Agenda: & \\ \hline
+			Outcome: & \\  \hline
+			\hline
+			\multicolumn{2}{ |l|}{ \textbf{Meeting 18}} \\  \hline
+			Date: & 02/03/2015 (3pm) \\  \hline
+			Attendance: & \\ \hline
+			Duration: &  \\  \hline
+			Agenda: & \\ \hline
+			Outcome: & \\  \hline
+		\end{tabular}
+
+	\subsection{Personal Logs} %Each member should be completing there own log 
+	\subsection{Usecase Diagram} 
+	\subsection{Class Diagram}
+	\subsection{Sequence Diagram}
+	\subsection{Project Plan} %To be updated
+	\subsection{Gantt Chart}
+	\subsection{Project Risk Table}
+
+	\begin{tabular}{|m{5cm}|m{2cm}|m{2.5cm}|m{6cm}|}
+		\hline
+	\textbf{Risk Description} & \textbf{Likelihood of Occurrence Risk Level} & \textbf{Potential Risk Level Impact on Project} & \textbf{Prevention}\\ \hline 
+	Team members missing meetings & High & Medium & If a group meeting is missed by any member read the minutes and be in contact via email to know what task is expected. \\ \hline
+	Team member gets ill & High & Low & If a team member if ill its pardoned they need to make sure when they feel better get work to get back update and other group members should keep them involved. \\ \hline
+	Team member dropping out & Low & High & Any disagreements should be address to avoid disruptions between members \\ \hline
+	Poor Project Management& High & High& Project coordinator make sure that member is on track and based on the plan ensure the group is on track and if not address the issue.\\ \hline
+	Missing Deadlines& Medium & High & Make sure deadlines are clearly stated and each member knows when they are. As well as ensure that there is always contingency time incase work load becomes heavy towards deadline\\ \hline
+	Misunderstanding of Task Concepts& High & Medium& \\ \hline
+	Lack of Communication Between Group Members& & & Despite having two group meetings a week continue to be in conversation via Facebook/Email \\ \hline
+	Uneven Distribution of Tasks between team members& High & Medium& Make sure each team member is comfortable with the tasks given, If not within a group meeting raise concern.\\ \hline
+	Task Targets Unclear & Medium & Medium & At each meeting make sure the targets are clear.\\ \hline
+	Drastic Change of Scope& Medium& High & If drastic changes need to be made ensure that they are feasible.\\ \hline
+	\end{tabular}
+	\subsection{Live Application}
+	\subsection{Package Diagram}
+\end{document} %END OF REPORT

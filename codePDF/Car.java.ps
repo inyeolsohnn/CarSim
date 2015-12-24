@@ -1,0 +1,1518 @@
+%!PS-Adobe-3.0
+%%Title: Car.java
+%%For: Tanda Kabanda
+%%Creator: a2ps version 4.14
+%%CreationDate: Thu Mar 26 02:10:31 2015
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 3
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 7.493857 def
+/cw 4.496314 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   522.321860 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( model;) p n
+() N
+(import) K
+( java.awt.Color;) p n
+(import) K
+( java.awt.Graphics;) p n
+(import) K
+( java.awt.geom.Point2D; ) p
+(//test//) c n
+(import) K
+( java.util.ArrayList;) p n
+(import) K
+( java.util.Random;) p n
+() N
+(public) K
+( ) p
+(class) K
+( ) p
+(Car) L
+( {) p n
+() S 8 T () S
+(private) K
+( ) p
+(static) K
+( ) p
+(int) k
+( carsCreated = 0;) p n
+() N
+() S 8 T () S
+(private) K
+( Point2D.Float coordinate;) p n
+() S 8 T () S
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( id;) p n
+() S 8 T () S
+(private) K
+( ) p
+(float) k
+( desiredSpeed;) p n
+() S 8 T () S
+(private) K
+( ) p
+(float) k
+( currentSpeed;) p n
+() S 8 T () S
+(private) K
+( Random rng = ) p
+(new) K
+( Random\(\);) p n
+() S 8 T () S
+(private) K
+( Road currentRoad;) p n
+() S 8 T () S
+(private) K
+( Lane currentLane;) p n
+() S 8 T () S
+(/*) c n
+() S 8 T ( * targetLane: not used to its full purpose in current version. Was supp) N
+(osed) N
+() S 8 T ( * to be part of inner road lane change) N
+() S 8 T ( */) N
+() p 8 T () S
+(private) K
+( Lane targetLane;) p n
+() S 8 T () S
+(/*) c n
+() S 8 T ( * target connection: connection it aims to make a turn at. Can be null ) N
+(if) N
+() S 8 T ( * the car decides to reach an exit point) N
+() S 8 T ( */) N
+() p 8 T () S
+(private) K
+( Connection targetConnection;) p n
+() S 8 T () S
+(private) K
+( CarWorld cWorld;) p n
+() N
+() S 8 T () S
+(/*) c n
+() S 8 T ( * distanceTravelled: distance travelled on the current road, required f) N
+(or) N
+() S 8 T ( * perception sequence) N
+() S 8 T ( */) N
+() p 8 T () S
+(private) K
+( ) p
+(float) k
+( distanceTravelled;) p n
+() N
+() S 8 T () S
+(public) K
+( Car\(Point2D.Float coordinate, ) p
+(float) k
+( ds, Lane initialLane,) p n
+() S 8 T () S 16 T () S 24 T (CarWorld cWorld, Point2D.Float entryPoint\) {) N
+() S 8 T () S 16 T (this.id = Car.carsCreated;) N
+() S 8 T () S 16 T (Car.carsCreated++;) N
+() S 8 T () S 16 T (this.coordinate = coordinate;) N
+() S 8 T () S 16 T (this.desiredSpeed = ds;) N
+() S 8 T () S 16 T (this.enterLane\(initialLane, entryPoint\);) N
+() S 8 T () S 16 T (this.cWorld = cWorld;) N
+() N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(int) k
+( totalCar\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( Car.carsCreated;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( Road getRoad\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( this.currentRoad;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(float) k
+( getTravelled\(\) {) p n
+() N
+() S 8 T () S 16 T () S
+(return) K
+( this.distanceTravelled;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(void) k
+( setCarsCreated\() p
+(int) k
+( i\) {) p n
+() N
+() S 8 T () S 16 T (carsCreated = i;) N
+() N
+() S 8 T (}) N
+() N
+(Car.java) (Page 1/6) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S
+(/*) c n
+() S 8 T ( * checkCourse: not used to its full purpose in current version. Was) N
+() S 8 T ( * supposed to be part of inner road lane change. Currently being used a) N
+(s a) N
+() S 8 T ( * part of speed decision when making a turn) N
+() S 8 T ( */) N
+() p 8 T () S
+(private) K
+( ) p
+(boolean) k
+( checkCourse\(\) {) p n
+() N
+() S 8 T () S 16 T () S
+(return) K
+( \(this.currentLane.equals\(this.targetLane\)\);) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(int) k
+( getId\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( this.id;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( setTravelled\() p
+(float) k
+( f\) {) p n
+() S 8 T () S 16 T (this.distanceTravelled = f;) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( Point2D.Float getCoordinate\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( coordinate;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( setCoordinate\(Point2D.Float coordinate\) {) p n
+() S 8 T () S 16 T (this.coordinate = coordinate;) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(float) k
+( getDesiredSpeed\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( desiredSpeed;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( setDesiredSpeed\() p
+(float) k
+( ds\) {) p n
+() S 8 T () S 16 T (this.desiredSpeed = ds;) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(float) k
+( getCurrentSpeed\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( currentSpeed;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( setCurrentSpeed\() p
+(float) k
+( currentSpeed\) {) p n
+() S 8 T () S 16 T (this.currentSpeed = currentSpeed;) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( Lane getCurrentLane\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( currentLane;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( setCurrentLane\(Lane currentLane\) {) p n
+() S 8 T () S 16 T (this.currentLane = currentLane;) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(/*) c n
+() S 8 T ( * enterLane: lane entering logic. If the road of the lanes change,) N
+() S 8 T ( * enterRoad will be called as well) N
+() S 8 T ( */) N
+() p 8 T () S
+(public) K
+( ) p
+(void) k
+( enterLane\(Lane lane, Point2D.Float entryPoint\) {) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(this.currentLane != ) p
+(null) k
+(\) {) p n
+() S 8 T () S 16 T () S 24 T (this.currentLane.carLeaves\() S
+(this) k
+(\);) p n
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(if) K
+( \(lane ) p
+(instanceof) K
+( StraightLane\) {) p n
+() S 8 T () S 16 T () S 24 T () S
+(// entering a straightlane) c n
+() p 8 T () S 16 T () S 24 T (this.setTravelled\(lane.findDistance\() S
+(this) k
+(\)\);) p n
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(lane ) p
+(instanceof) K
+( Connection\) {) p n
+() S 8 T () S 16 T () S 24 T () S
+(// entering a connection) c n
+() p 8 T () S 16 T () S 24 T (this.setTravelled\(1\);) N
+() S 8 T () S 16 T () S 24 T (this.targetConnection = ) S
+(null) k
+(;) p n
+() N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (this.coordinate = entryPoint;) N
+(Car.java) (Page 2/6) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Car.java) (1/3) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() S 8 T () S 16 T (Road tRoad = lane.getRoad\(\);) N
+() S 8 T () S 16 T (Lane previousLane = this.currentLane;) N
+() S 8 T () S 16 T (Road previousRoad;) N
+() S 8 T () S 16 T () S
+(if) K
+( \(previousLane == ) p
+(null) k
+(\) {) p n
+() S 8 T () S 16 T () S 24 T (previousRoad = ) S
+(null) k
+(;) p n
+() S 8 T () S 16 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T (previousRoad = previousLane.getRoad\(\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (this.currentLane = lane;) N
+() S 8 T () S 16 T (lane.carEnters\() S
+(this) k
+(\);) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(!tRoad.equals\(previousRoad\)\) {) p n
+() S 8 T () S 16 T () S 24 T (System.out.println\(") S
+(Entering road) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T (enterRoad\(tRoad\);) N
+() S 8 T () S 16 T (}) N
+() N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(private) K
+( ) p
+(void) k
+( enterRoad\(Road tRoad\) {) p n
+() N
+() S 8 T () S 16 T () S
+(/* gets the whole connections available on */) c n
+() p 8 T () S 16 T (ArrayList<Connection> connections = currentLane.getSameConnectio) N
+(ns\(\);) N
+() S 8 T () S 16 T () S
+(/* sanitizes the list to have connections that are ahead of the ) c n
+(cars */) N
+() p 8 T () S 16 T (ArrayList<Connection> legalConnections = ) S
+(new) K
+( ArrayList<Connectio) p n
+(n>\(\);) N
+() S 8 T () S 16 T () S
+(for) K
+( \() p
+(int) k
+( i = 0; i < connections.size\(\); i++\) {) p n
+() S 8 T () S 16 T () S 24 T (Connection cc = connections.get\(i\);) N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(Car.distance\(this.currentLane.getStart\(\), cc.getStar) p n
+(t\(\)\) >= this.distanceTravelled\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T (legalConnections.add\(cc\);) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(boolean) k
+( ending = currentLane.isEnding\(\);) p n
+() S 8 T () S 16 T () S
+(/* dummy: Connection representing an exit point */) c n
+() p 8 T () S 16 T (Connection dummy = ) S
+(new) K
+( Connection\(\);) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(ending\) {) p n
+() S 8 T () S 16 T () S 24 T (legalConnections.add\(dummy\);) N
+() S 8 T () S 16 T (}) N
+() N
+() S 8 T () S 16 T () S
+(int) k
+( random = rng.nextInt\(legalConnections.size\(\)\);) p n
+() S 8 T () S 16 T (Connection chosen = legalConnections.get\(random\);) N
+() N
+() S 8 T () S 16 T () S
+(/*) c n
+() S 8 T () S 16 T ( * if the dummy connection is randomly chosen it will aim to rea) N
+(ch the) N
+() S 8 T () S 16 T ( * exit point of the car. Other wise appropriate state changes o) N
+(ccur for) N
+() S 8 T () S 16 T ( * making turns) N
+() S 8 T () S 16 T ( */) N
+() p 8 T () S 16 T () S
+(if) K
+( \(chosen.equals\(dummy\)\) {) p n
+() S 8 T () S 16 T () S 24 T (ArrayList<Lane> sameLanes = currentLane.getSameLanes\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( nr = rng.nextInt\(sameLanes.size\(\)\);) p n
+() S 8 T () S 16 T () S 24 T (Lane chosenLane = sameLanes.get\(nr\);) N
+() S 8 T () S 16 T () S 24 T (this.targetLane = chosenLane;) N
+() S 8 T () S 16 T () S 24 T (this.targetConnection = ) S
+(null) k
+(;) p n
+() S 8 T () S 16 T (} ) S
+(else) K
+( {) p n
+() N
+() S 8 T () S 16 T () S 24 T (this.targetLane = chosen.getStartLane\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(Car.distance\(this.currentLane.getStart\(\), chosen.get) p n
+(Start\(\)\) >= this.distanceTravelled\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T (this.targetConnection = chosen;) N
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (this.targetConnection = ) S
+(null) k
+(;) p n
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (this.currentRoad = tRoad;) N
+() S 8 T (}) N
+(Car.java) (Page 3/6) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() S 8 T () S
+(/* move: decision making as well as updating its coordinate */) c n
+() p 8 T () S
+(public) K
+( ) p
+(void) k
+( move\(\) {) p n
+() N
+() S 8 T () S 16 T () S
+(// perception sequence: START) c n
+() p n
+() S 8 T () S 16 T (Car frontCar = this.currentLane.getFrontCar\() S
+(this) k
+(\);) p n
+() S 8 T () S 16 T (TrafficLight tfl = this.currentLane.getNextTrafficLight\() S
+(this) k
+(\);) p n
+() S 8 T () S 16 T () S
+(float) k
+( cd = 100;) p n
+() S 8 T () S 16 T () S
+(float) k
+( td = 100;) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(frontCar != ) p
+(null) k
+(\) {) p n
+() S 8 T () S 16 T () S 24 T (cd = Car.distance\(frontCar.getCoordinate\(\), this.getCoor) N
+(dinate\(\)\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(if) K
+( \(tfl != ) p
+(null) k
+(\) {) p n
+() S 8 T () S 16 T () S 24 T (td = Car.distance\(tfl.getCoordinate\(\), this.getCoordinat) N
+(e\(\)\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(// current---car---trafficlight\(red/green\)----100m :: react to t) c n
+(he car) N
+() p 8 T () S 16 T () S
+(// current----trafficlight\(green\)---car--100m :: react to the ca) c n
+(r) N
+() p 8 T () S 16 T () S
+(// current---trafficlight\(red\)----car ---100m :: react to the li) c n
+(ght) N
+() p 8 T () S 16 T () S
+(// current -----100m----x-----y :: free run) c n
+() p 8 T () S 16 T () S
+(if) K
+( \(cd >= 100 && td >= 100\) {) p n
+() S 8 T () S 16 T () S 24 T () S
+(// free run) c n
+() p 8 T () S 16 T () S 24 T (accelerate\(\);) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(td < cd && td < 100 && tfl.getStatus\(\).equals\(") p
+(red) str
+("\)\)) p n
+( {) N
+() S 8 T () S 16 T () S 24 T () S
+(// react to the red light) c n
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+( \(td < 15\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (this.setCurrentSpeed\(0\);) N
+() S 8 T () S 16 T () S 24 T () S
+(else) K
+( ) p
+(if) K
+( \(td < 70\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (this.setCurrentSpeed\(td\);) N
+() S 8 T () S 16 T () S 24 T () S
+(else) K
+( ) p
+(if) K
+( \(td < 100\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(this.currentSpeed > td\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (decelerate\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (}) N
+() N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(\(td < cd && td < 100 && tfl.getStatus\(\).equals\(") p
+(green) str
+(") p n
+(\)\)\) {) N
+() S 8 T () S 16 T () S 24 T () S
+(// react to the green light-> ignore the light and react) c n
+( to the) N
+() p 8 T () S 16 T () S 24 T () S
+(// closest car or slow down if making turn) c n
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+( \(this.targetConnection != ) p
+(null) k n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (&& checkCourse\(\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (&& Car.distance\(this.coordinate,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (this.targetConnection.ge) N
+(tStart\(\)\) < 100\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(td < 70\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(currentSpeed < 60\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (this.accelerate\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(else) K
+( ) p
+(if) K
+( \(currentSpeed > 80\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (this.decelerate\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(cd < 15\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (this.setCurrentSpeed\(0\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(cd < 70\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (this.setCurrentSpeed\(cd\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(cd < 100\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(this.currentSpeed > cd\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (decelerate\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (accelerate\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+(Car.java) (Page 4/6) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Car.java) (2/3) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5-6) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(\(cd < td && cd < 100\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S
+(// react to the car) c n
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+( \(cd < 15\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (this.setCurrentSpeed\(0\);) N
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(cd < 70\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (this.setCurrentSpeed\(cd\);) N
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(cd < 100\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(this.currentSpeed > cd\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (decelerate\(\);) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(// perception sequence: END) c n
+() p n
+() S 8 T () S 16 T () S
+(// action sequence: START) c n
+() p 8 T () S 16 T () S
+(if) K
+( \(this.currentSpeed == 0\) {) p n
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(frontCar != ) p
+(null) k
+(\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (System.out.println\(") S
+(front car : ) str
+(" + frontCar.coordina) p n
+(te\);) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S
+(float) k
+( tempDistance = this.currentSpeed * 0.02f;) p n
+() N
+() S 8 T () S 16 T () S 24 T (Point2D.Float nextPosition = this.currentLane.nextPositi) N
+(on\() S
+(this) k
+(,) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (tempDistance, this.distanceTravelled\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S
+(// state change sequence: Additional perception and chan) c n
+(ge in) N
+() p 8 T () S 16 T () S 24 T () S
+(// states: START) c n
+() p 8 T () S 16 T () S 24 T (Point2D.Float nextDisplacement = ) S
+(new) K
+( Point2D.Float\() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Math.abs\(nextPosition.x - this.coordinat) N
+(e.x\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Math.abs\(nextPosition.y - this.coordinat) N
+(e.y\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T (Point2D.Float dToEnd = ) S
+(new) K
+( Point2D.Float\(Math.abs\(curren) p n
+(tLane) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (.getEnd\(\).x - this.getCoordinate\(\).x\), M) N
+(ath.abs\(currentLane) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (.getEnd\(\).y - this.getCoordinate\(\).y\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(\(this.currentLane ) p
+(instanceof) K
+( StraightLane\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (&& \(dToEnd.x < nextDisplacement.x || dTo) N
+(End.y < nextDisplacement.y\)\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// reached an exit point) c n
+() p 8 T () S 16 T () S 24 T () S 32 T (this.coordinate = this.currentLane.getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (this.remove\(\);) N
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(\(this.currentLane ) p
+(instanceof) K
+( Connection\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float lastPoint = this.currentLane.getEn) N
+(d\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(Car.distance\(this.coordinate, lastPoint\) < 5) p n
+(\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (this.enterLane\() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(\(Connection\) this.curre) N
+(ntLane\).getTargetLane\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(\(Connection\) this.curre) N
+(ntLane\).getEnd\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T (this.coordinate = nextPosition;) N
+() N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(this.targetConnection != ) p
+(null) k
+(\) {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(Car.distance\(this.currentLane.getStart\(\),) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (targetConnection.getStart\(\)\) <= ) N
+(this.distanceTravelled) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (&& checkCourse\(\)\) {) N
+(Car.java) (Page 5/6) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (this.enterLane\(targetConnection,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (targetConnection.getStar) N
+(t\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T (}) N
+() N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(// State change sequence: END) c n
+() p 8 T () S 16 T () S
+(// action sequence: END) c n
+() p 8 T (}) N
+() N
+() S 8 T () S
+(private) K
+( ) p
+(void) k
+( decelerate\(\) {) p n
+() S 8 T () S 16 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T (this.currentSpeed -= 500 * 0.02;) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(private) K
+( ) p
+(void) k
+( accelerate\(\) {) p n
+() S 8 T () S 16 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T () S
+(if) K
+( \(this.currentSpeed < this.desiredSpeed\) {) p n
+() S 8 T () S 16 T () S 24 T (this.currentSpeed += 30 * 0.02;) N
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( remove\(\) {) p n
+() S 8 T () S 16 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T (this.cWorld.removeCar\() S
+(this) k
+(\);) p n
+() S 8 T () S 16 T (this.currentLane.removeCar\() S
+(this) k
+(\);) p n
+() S 8 T () S 16 T (System.gc\(\);) N
+() N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( paint\(Graphics g\) {) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(this.currentSpeed >= 160\) {) p n
+() S 8 T () S 16 T () S 24 T (g.setColor\(Color.RED\);) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(this.currentSpeed < 160 && this.currentSpeed >= 120\) ) p n
+({) N
+() S 8 T () S 16 T () S 24 T (g.setColor\(Color.ORANGE\);) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(this.currentSpeed < 120 && this.currentSpeed >= 80\) {) p n
+() S 8 T () S 16 T () S 24 T (g.setColor\(Color.YELLOW\);) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(this.currentSpeed < 80 && this.currentSpeed >= 40\) {) p n
+() S 8 T () S 16 T () S 24 T (g.setColor\(Color.MAGENTA\);) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(this.currentSpeed < 40 && this.currentSpeed > 0\) {) p n
+() S 8 T () S 16 T () S 24 T (g.setColor\(Color.BLUE\);) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(this.currentSpeed == 0\) {) p n
+() S 8 T () S 16 T () S 24 T (g.setColor\(Color.BLACK\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (g.fillOval\(\() S
+(int) k
+(\) coordinate.x - 4, \() p
+(int) k
+(\) coordinate.y - 4, 8, 8\)) p n
+(;) N
+() N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(float) k
+( distance\(Point2D.Float p1, Point2D.Float p2\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( \() p
+(float) k
+(\) Math.sqrt\(Math.pow\(\(p1.x - p2.x\), 2.0\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (+ Math.pow\(p1.y - p2.y, 2.0\)\);) N
+() S 8 T (}) N
+() N
+(}) N
+(Car.java) (Page 6/6) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Car.java) (3/3) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

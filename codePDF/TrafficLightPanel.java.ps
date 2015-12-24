@@ -1,0 +1,1376 @@
+%!PS-Adobe-3.0
+%%Title: TrafficLightPanel.java
+%%For: Tanda Kabanda
+%%Creator: a2ps version 4.14
+%%CreationDate: Thu Mar 26 02:10:33 2015
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 3
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 7.493857 def
+/cw 4.496314 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   522.321860 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( view;) p n
+() N
+(import) K
+( java.awt.BorderLayout;) p n
+(import) K
+( java.awt.Color;) p n
+(import) K
+( java.awt.Dimension;) p n
+(import) K
+( java.awt.Font;) p n
+(import) K
+( java.awt.event.ActionEvent;) p n
+(import) K
+( java.awt.event.ActionListener;) p n
+(import) K
+( java.io.File;) p n
+(import) K
+( java.util.ArrayList;) p n
+(import) K
+( java.util.HashMap;) p n
+() N
+(import) K
+( javax.swing.ImageIcon;) p n
+(import) K
+( javax.swing.JButton;) p n
+(import) K
+( javax.swing.JLabel;) p n
+(import) K
+( javax.swing.JOptionPane;) p n
+(import) K
+( javax.swing.JPanel;) p n
+(import) K
+( javax.swing.JScrollPane;) p n
+(import) K
+( javax.swing.JTextField;) p n
+() N
+(import) K
+( model.TrafficLight;) p n
+(import) K
+( control.TrafficLightController;) p n
+(import) K
+( control.WorldController;) p n
+() N
+(public) K
+( ) p
+(class) K
+( ) p
+(TrafficLightPanel) L
+( ) p
+(extends) K
+( JPanel ) p
+(implements) K
+( ActionListener {) p n
+() S 8 T () S
+(private) K
+( JPanel panel, btnHolderPanel;) p n
+() S 8 T () S
+(private) K
+( JScrollPane jsp;) p n
+() S 8 T () S
+(private) K
+( BorderLayout bl = ) p
+(new) K
+( BorderLayout\(\);) p n
+() S 8 T () S
+(private) K
+( JButton rtrnButton;) p n
+() S 8 T () S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( INTERVAL_MIN = 0;) p n
+() S 8 T () S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( INTERVAL_MAX = 20;) p n
+() S 8 T () S
+(private) K
+( ArrayList<TrafficLight> lights;) p n
+() N
+() S 8 T () S
+(private) K
+( WorldController wController;) p n
+() S 8 T () S
+(private) K
+( CarSimView mainFrame;) p n
+() N
+() S 8 T () S
+(private) K
+( String TrifficLightID;) p n
+() S 8 T () S
+(private) K
+( ImageIcon traffic_img;) p n
+() S 8 T () S
+(private) K
+( HashMap<Integer, JTextField> greenList, redList, initList;) p n
+() N
+() S 8 T () S
+(public) K
+( TrafficLightPanel\(WorldController wc,) p n
+() S 8 T () S 16 T () S 24 T () S
+(final) K
+( TrafficLightController tlc, ) p
+(final) K
+( CarSimView mainF) p n
+(rame, ) S
+(int) k
+( id\) {) p n
+() S 8 T () S 16 T (this.wController = wc;) N
+() S 8 T () S 16 T (this.greenList = ) S
+(new) K
+( HashMap<Integer, JTextField>\(\);) p n
+() S 8 T () S 16 T (this.redList = ) S
+(new) K
+( HashMap<Integer, JTextField>\(\);) p n
+() S 8 T () S 16 T (this.initList = ) S
+(new) K
+( HashMap<Integer, JTextField>\(\);) p n
+() S 8 T () S 16 T (this.mainFrame = mainFrame;) N
+() N
+() S 8 T () S 16 T (panel = ) S
+(new) K
+( JPanel\(\);) p n
+() S 8 T () S 16 T (btnHolderPanel = ) S
+(new) K
+( JPanel\(\);) p n
+() S 8 T () S 16 T (rtrnButton = ) S
+(new) K
+( CustomJButton\(") p
+(Return) str
+("\);) p n
+() S 8 T () S 16 T (rtrnButton.addActionListener\() S
+(this) k
+(\);) p n
+() S 8 T () S 16 T (lights = tlc.getLights\(\);) N
+() S 8 T () S 16 T (System.out.println\(lights.size\(\)\);) N
+() N
+() S 8 T () S 16 T (JLabel trafficLightTitle = ) S
+(new) K
+( JLabel\(\);) p n
+() S 8 T () S 16 T (traffic_img = ) S
+(new) K
+( ImageIcon\(getClass\(\).getResource\(File.separato) p n
+(r + ") S
+(gfx) str
+(") p n
+() S 8 T () S 16 T () S 24 T () S 32 T (+ File.separator + ") S
+(adjustTrafficLight_gfx.png) str
+("\)\);) p n
+() S 8 T () S 16 T (trafficLightTitle.setIcon\(traffic_img\);) N
+() S 8 T () S 16 T () S
+(//JLabel space = new JLabel\("  "\);) c n
+() p 8 T () S 16 T (JLabel iInterval = ) S
+(new) K
+( JLabel\(") p
+(Initial Interval ) str
+("\);) p n
+() S 8 T () S 16 T (JLabel gInterval = ) S
+(new) K
+( JLabel\(") p
+(  Green Interval  ) str
+("\);) p n
+() S 8 T () S 16 T (JLabel rInterval = ) S
+(new) K
+( JLabel\(") p
+(  Red Interval) str
+("\);) p n
+() N
+() S 8 T () S 16 T (Font font = ) S
+(new) K
+( Font\(") p
+(Tahoma) str
+(", Font.BOLD, 15\);) p n
+() S 8 T () S 16 T (iInterval.setFont\(font\);) N
+() S 8 T () S 16 T (gInterval.setFont\(font\);) N
+(TrafficLightPanel.java) (Page 1/5) (Mar 26, 15 1:26) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (rInterval.setFont\(font\);) N
+() S 8 T () S 16 T () S
+(//space.setFont\(font\);) c n
+() p n
+() S 8 T () S 16 T (JPanel a = ) S
+(new) K
+( JPanel\(\);) p n
+() S 8 T () S 16 T (a.setPreferredSize\() S
+(new) K
+( Dimension\(920, 30\)\);) p n
+() S 8 T () S
+(//) c 16 T (a.add\(space\);) N
+() p 8 T () S 16 T (a.add\(iInterval\);) N
+() S 8 T () S 16 T (a.add\(gInterval\);) N
+() S 8 T () S 16 T (a.add\(rInterval\);) N
+() S 8 T () S 16 T (a.add\() S
+(new) K
+( JLabel\(") p
+(                         ) str
+("\)\);) p n
+() N
+() S 8 T () S 16 T (panel.add\(a\);) N
+() S 8 T () S 16 T () S
+(int) k
+( trafficLightSize = lights.size\(\);) p n
+() S 8 T () S 16 T (panel.setPreferredSize\() S
+(new) K
+( Dimension\(920, 64 * trafficLightSize\)) p n
+(\);) N
+() N
+() S 8 T () S 16 T (System.out.println\(") S
+(size) str
+(" + trafficLightSize\);) p n
+() S 8 T () S 16 T () S
+(if) K
+( \(id == 0\) {) p n
+() S 8 T () S 16 T () S 24 T () S
+(for) K
+( \() p
+(int) k
+( i = 0; i < trafficLightSize; i++\) {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (JPanel container = ) S
+(new) K
+( JPanel\(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (container.setBackground\(Color.WHITE\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (container.setPreferredSize\() S
+(new) K
+( Dimension\(920, 58) p n
+(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (TrifficLightID = "" + lights.get\(i\).getId\(\); ) S
+(// ) c n
+(THIS IS NEW) N
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T (JLabel lbl = ) S
+(new) K
+( JLabel\(") p
+(traffic light ) str
+("+TrifficLightI) p n
+(D+") S
+(   ) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (Font font2 = ) S
+(new) K
+( Font\(") p
+(Tahoma) str
+(", Font.BOLD, 16\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (lbl.setFont\(font2\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (lbl.setForeground\(Color.black\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(lights.get\(i\).getId\(\) == id\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (lbl.setOpaque\() S
+(true) k
+(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (container.setBackground\(Color.red\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (lbl.setForeground\(Color.blue\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\(lbl\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (JTextField initialTField = ) S
+(new) K
+( JTextField\("") p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (+ lights.get\(i\).getInit\(\), 7\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (initList.put\(lights.get\(i\).getId\(\), initialTFiel) N
+(d\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (JTextField greenTField = ) S
+(new) K
+( JTextField\("") p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (+ lights.get\(i\).getGreen\(\), 7\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (greenList.put\(lights.get\(i\).getId\(\), greenTField) N
+(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (JTextField redTField = ) S
+(new) K
+( JTextField\("") p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (+ lights.get\(i\).getRed\(\), 7\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (redList.put\(lights.get\(i\).getId\(\), redTField\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (JButton submitBtn = ) S
+(new) K
+( LightButton\(") p
+(submit) str
+(",) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (Integer.parseInt\(TrifficLightID\)) N
+(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (submitBtn.setPreferredSize\() S
+(new) K
+( Dimension\(100, 25) p n
+(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (submitBtn.addActionListener\() S
+(new) K
+( ActionListener\(\)) p n
+( {) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (@Override) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(public) K
+( ) p
+(void) k
+( actionPerformed\(ActionEvent ) p n
+(e\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// TODO Auto-generated method st) c n
+(ub) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(int) k
+( id = \(\(LightButton\) e.getSou) p n
+(rce\(\)\).getId\(\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (JTextField init = initList.get\(i) N
+(d\);) N
+() N
+(TrafficLightPanel.java) (Page 2/5) (Mar 26, 15 1:26) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/view/TrafficLightPanel.java) (1/3) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (JTextField red = redList.get\(id\)) N
+(;) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (JTextField green = greenList.get) N
+(\(id\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(try) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(float) k
+( redInt = Float.par) p n
+(seFloat\(red.getText\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(float) k
+( initInt = Float.pa) p n
+(rseFloat\(init.getText\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(float) k
+( greenInt = Float.p) p n
+(arseFloat\(green.getText\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(if) K
+( \(redInt < 0 || initIn) p n
+(t < 0 || greenInt < 0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S
+(throw) K
+( ) p
+(new) K
+( Except) p n
+(ion\(\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (tlc.setInterval\(") S
+(red) str
+(", r) p n
+(edInt, id\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (tlc.setInterval\(") S
+(green) str
+(", ) p n
+(greenInt, id\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (tlc.setInterval\(") S
+(initial) str
+(", ) p n
+(initInt, id\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (} ) S
+(catch) K
+( \(Exception exc\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (JOptionPane) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T (.showMes) N
+(sageDialog\() S
+(null) k
+(,) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T () S 80 T () N
+() S 0 T (") S
+(check if the input is valid. Input needs to be a positive float number) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (}\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (JButton removeBtn = ) S
+(new) K
+( LightButton\(") p
+(remove) str
+(",) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (Integer.parseInt\(TrifficLightID\)) N
+(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (removeBtn.setPreferredSize\() S
+(new) K
+( Dimension\(100, 25) p n
+(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (removeBtn.addActionListener\() S
+(new) K
+( ActionListener\(\)) p n
+( {) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (@Override) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(public) K
+( ) p
+(void) k
+( actionPerformed\(ActionEvent ) p n
+(e\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// TODO Auto-generated method st) c n
+(ub) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (tlc.removeLight\(\(\(LightButton\) e) N
+(.getSource\(\)\).getId\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (mainFrame.TrafficPanel\(0\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (}\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\() S
+(new) K
+( JLabel\(") p
+(      ) str
+("\)\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\(initialTField\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\() S
+(new) K
+( JLabel\(") p
+(            ) str
+("\)\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\(greenTField\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\() S
+(new) K
+( JLabel\(") p
+(             ) str
+("\)\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\(redTField\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\() S
+(new) K
+( JLabel\(") p
+(      ) str
+("\)\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\(submitBtn\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (container.add\(removeBtn\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (panel.add\(container\);) N
+() N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T (JPanel container = ) S
+(new) K
+( JPanel\(\);) p n
+() S 8 T () S 16 T () S 24 T (container.setBackground\(Color.WHITE\);) N
+(TrafficLightPanel.java) (Page 3/5) (Mar 26, 15 1:26) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T (container.setPreferredSize\() S
+(new) K
+( Dimension\(920, 58\)\);) p n
+() S 8 T () S 16 T () S 24 T (TrifficLightID = ""; ) S
+(// THIS IS NEW) c n
+() p 8 T () S 16 T () S 24 T (TrafficLight cl = ) S
+(null) k
+(;) p n
+() S 8 T () S 16 T () S 24 T () S
+(for) K
+( \() p
+(int) k
+( i = 0; i < lights.size\(\); i++\) {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(lights.get\(i\).getId\(\) == id\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (cl = lights.get\(i\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (TrifficLightID += cl.getId\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T (JLabel lbl = ) S
+(new) K
+( JLabel\(") p
+(traffic light ) str
+("+TrifficLightID+") p
+(   ) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T (Font font2 = ) S
+(new) K
+( Font\(") p
+(Tahoma) str
+(", Font.BOLD, 16\);) p n
+() S 8 T () S 16 T () S 24 T (lbl.setFont\(font2\);) N
+() S 8 T () S 16 T () S 24 T (lbl.setForeground\(Color.black\);) N
+() N
+() S 8 T () S 16 T () S 24 T (container.add\(lbl\);) N
+() S 8 T () S 16 T () S 24 T (JTextField initialTField = ) S
+(new) K
+( JTextField\("" + cl.getIni) p n
+(t\(\), 7\);) N
+() S 8 T () S 16 T () S 24 T (initList.put\(cl.getId\(\), initialTField\);) N
+() S 8 T () S 16 T () S 24 T (JTextField greenTField = ) S
+(new) K
+( JTextField\("" + cl.getGreen) p n
+(\(\), 7\);) N
+() S 8 T () S 16 T () S 24 T (greenList.put\(cl.getId\(\), greenTField\);) N
+() S 8 T () S 16 T () S 24 T (JTextField redTField = ) S
+(new) K
+( JTextField\("" + cl.getRed\(\), ) p n
+(7\);) N
+() S 8 T () S 16 T () S 24 T (redList.put\(cl.getId\(\), redTField\);) N
+() N
+() S 8 T () S 16 T () S 24 T (JButton submitBtn = ) S
+(new) K
+( LightButton\(") p
+(submit) str
+(",) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Integer.parseInt\(TrifficLightID\)\);) N
+() S 8 T () S 16 T () S 24 T (submitBtn.setPreferredSize\() S
+(new) K
+( Dimension\(100, 25\)\);) p n
+() S 8 T () S 16 T () S 24 T (submitBtn.addActionListener\() S
+(new) K
+( ActionListener\(\) {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (@Override) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(public) K
+( ) p
+(void) k
+( actionPerformed\(ActionEvent e\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(int) k
+( id = \(\(LightButton\) e.getSource\(\)\).g) p n
+(etId\(\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (JTextField init = initList.get\(id\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (JTextField red = redList.get\(id\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (JTextField green = greenList.get\(id\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(try) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(float) k
+( redInt = Float.parseFloat\() p n
+(red.getText\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(float) k
+( initInt = Float.parseFloat) p n
+(\(init.getText\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(float) k
+( greenInt = Float.parseFloa) p n
+(t\(green.getText\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(if) K
+( \(redInt < 0 || initInt < 0 ||) p n
+( greenInt < 0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(throw) K
+( ) p
+(new) K
+( Exception\(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (tlc.setInterval\(") S
+(red) str
+(", redInt, i) p n
+(d\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (tlc.setInterval\(") S
+(green) str
+(", greenInt) p n
+(, id\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (tlc.setInterval\(") S
+(initial) str
+(", initInt,) p n
+( id\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (} ) S
+(catch) K
+( \(Exception exc\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (JOptionPane) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (.showMessageDial) N
+(og\() S
+(null) k
+(,) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T () S 80 T () N
+(") S
+(check if the input is valid. Input needs to be a positive float number) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+(TrafficLightPanel.java) (Page 4/5) (Mar 26, 15 1:26) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/view/TrafficLightPanel.java) (2/3) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() S 8 T () S 16 T () S 24 T (}\);) N
+() S 8 T () S 16 T () S 24 T (JButton removeBtn = ) S
+(new) K
+( LightButton\(") p
+(remove) str
+(",) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Integer.parseInt\(TrifficLightID\)\);) N
+() S 8 T () S 16 T () S 24 T (removeBtn.setPreferredSize\() S
+(new) K
+( Dimension\(100, 25\)\);) p n
+() S 8 T () S 16 T () S 24 T (removeBtn.addActionListener\() S
+(new) K
+( ActionListener\(\) {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (@Override) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(public) K
+( ) p
+(void) k
+( actionPerformed\(ActionEvent e\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (tlc.removeLight\(\(\(LightButton\) e.getSour) N
+(ce\(\)\).getId\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (panel.removeAll\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (repaint\(\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T (}\);) N
+() S 8 T () S 16 T () S 24 T (container.add\() S
+(new) K
+( JLabel\(") p
+(      ) str
+("\)\);) p n
+() S 8 T () S 16 T () S 24 T (container.add\(initialTField\);) N
+() S 8 T () S 16 T () S 24 T (container.add\() S
+(new) K
+( JLabel\(") p
+(            ) str
+("\)\);) p n
+() S 8 T () S 16 T () S 24 T (container.add\(greenTField\);) N
+() S 8 T () S 16 T () S 24 T (container.add\() S
+(new) K
+( JLabel\(") p
+(             ) str
+("\)\);) p n
+() S 8 T () S 16 T () S 24 T (container.add\(redTField\);) N
+() S 8 T () S 16 T () S 24 T (container.add\() S
+(new) K
+( JLabel\(") p
+(      ) str
+("\)\);) p n
+() S 8 T () S 16 T () S 24 T (container.add\(submitBtn\);) N
+() S 8 T () S 16 T () S 24 T (container.add\(removeBtn\);) N
+() S 8 T () S 16 T () S 24 T (panel.add\(container\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(/*) c n
+() S 8 T () S 16 T ( * JSlider slider1 = new JSlider\(\); JSlider slider2 = new JSlide) N
+(r\(\);) N
+() S 8 T () S 16 T ( * JSlider slider3 = new JSlider\(\); JSlider slider4 = new JSlide) N
+(r\(\);) N
+() S 8 T () S 16 T ( * slider1.setPaintTicks\(true\); slider1.setPaintLabels\(true\);) N
+() S 8 T () S 16 T ( * slider1.setMinorTickSpacing\(2\);) N
+() S 8 T () S 16 T ( */) N
+() p n
+() S 8 T () S 16 T (jsp = ) S
+(new) K
+( JScrollPane\(panel, JScrollPane.VERTICAL_SCROLLBAR_ALWA) p n
+(YS,) N
+() S 8 T () S 16 T () S 24 T () S 32 T (JScrollPane.HORIZONTAL_SCROLLBAR_NEVER\);) N
+() S 8 T () S 16 T (panel.setBackground\(Color.WHITE\);) N
+() S 8 T () S 16 T (btnHolderPanel.setPreferredSize\() S
+(new) K
+( Dimension\(1000, 200\)\);) p n
+() S 8 T () S 16 T (jsp.setPreferredSize\() S
+(new) K
+( Dimension\(920, 500\)\);) p n
+() S 8 T () S 16 T (jsp.setBackground\(Color.WHITE\);) N
+() S 8 T () S 16 T (this.add\(trafficLightTitle\);) N
+() S 8 T () S 16 T (this.add\(jsp\);) N
+() S 8 T () S 16 T (this.add\(btnHolderPanel\);) N
+() S 8 T () S 16 T (btnHolderPanel.add\(rtrnButton\);) N
+() N
+() S 8 T (}) N
+() N
+() S 8 T (@Override) N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( actionPerformed\(ActionEvent e\) {) p n
+() S 8 T () S 16 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T () S
+(if) K
+( \(e.getSource\(\) == rtrnButton\) { ) p
+(// T Junction choosen by user) c n
+() p 8 T () S 16 T () S 24 T (this.wController.pause\(\);) N
+() S 8 T () S 16 T () S 24 T (mainFrame.simulationView\(\); ) S
+(// Need to confirm where use) c n
+(r goes back) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T () S 80 T () S
+() c n
+(// too) N
+() p 8 T () S 16 T (}) N
+() N
+() S 8 T (}) N
+() N
+(}) S
+(TrafficLightPanel.java) (Page 5/5) (Mar 26, 15 1:26) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/view/TrafficLightPanel.java) (3/3) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

@@ -1,0 +1,2515 @@
+%!PS-Adobe-3.0
+%%Title: Road.java
+%%For: Tanda Kabanda
+%%Creator: a2ps version 4.14
+%%CreationDate: Thu Mar 26 02:10:32 2015
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 8
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 7.493857 def
+/cw 4.496314 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   522.321860 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( model;) p n
+() N
+(import) K
+( java.awt.Graphics;) p n
+(import) K
+( java.awt.geom.Line2D;) p n
+(import) K
+( java.awt.geom.Point2D;) p n
+(import) K
+( java.awt.geom.Point2D.Float;) p n
+(import) K
+( java.util.ArrayList;) p n
+(import) K
+( java.util.Collections;) p n
+(import) K
+( java.util.HashMap;) p n
+(import) K
+( java.util.Iterator;) p n
+(import) K
+( java.util.List;) p n
+(import) K
+( java.util.Map;) p n
+(import) K
+( java.util.Map.Entry;) p n
+() N
+(public) K
+( ) p
+(abstract) K
+( ) p
+(class) K
+( ) p
+(Road) L
+( {) p n
+() S 8 T () S
+(// knows which lane is connecting to which road, pair of \(lane number, a) c n
+(nd) N
+() p 8 T () S
+(// the road it connects to\).) c n
+() p n
+() S 8 T () S
+(// some logical constrictions) c n
+() p 8 T () S
+(// base lane decides the type of the lanes that can be added) c n
+() p n
+() S 8 T () S
+(private) K
+( ) p
+(int) k
+( roadId;) p n
+() S 8 T () S
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( roadType;) p n
+() S 8 T () S
+(public) K
+( ) p
+(final) K
+( ) p
+(static) K
+( ) p
+(int) k
+( roadWidth = 20; ) p
+(// each lanes are 20 pixels wide) c n
+() p 8 T () S
+(private) K
+( ) p
+(static) K
+( ) p
+(int) k
+( roadsCreated = 0;) p n
+() S 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( STRAIGHT_LANE = 0;) p n
+() S 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( ROUNDABOUT = 1;) p n
+() S 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( CURVE = 2;) p n
+() S 8 T () S
+(private) K
+( HashMap<Integer, Lane> lanes = ) p
+(new) K
+( HashMap<Integer, Lane>\(\);) p n
+() S 8 T () S
+(private) K
+( CarWorld world;) p n
+() N
+() S 8 T () S
+(// bilateral vs unilateral state) c n
+() p 8 T () S
+(// definition of connection: contiguous legal movements possible) c n
+() p 8 T () S
+(private) K
+( ) p
+(boolean) k
+( bilateral;) p n
+() N
+() S 8 T () S
+(// used for 90 degrees rotation) c n
+() p 8 T () S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+([][] perpenMat = ) p
+(new) K
+( ) p
+(int) k
+([][] { { 0, -1 }, { 1, 0) p n
+( } };) N
+() N
+() S 8 T () S
+(public) K
+( Road\() p
+(int) k
+( roadType, CarWorld cWorld\) {) p n
+() S 8 T () S 16 T (this.roadId = roadsCreated;) N
+() S 8 T () S 16 T (this.world = cWorld;) N
+() S 8 T () S 16 T (roadsCreated++;) N
+() S 8 T () S 16 T (this.roadType = roadType;) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( paint\(Graphics g\) {) p n
+() S 8 T () S 16 T (Iterator<Entry<Integer, Lane>> it = lanes.entrySet\(\).iterator\(\);) N
+() S 8 T () S 16 T () S
+(while) K
+( \(it.hasNext\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T (Map.Entry pair = \(Map.Entry\) it.next\(\);) N
+() S 8 T () S 16 T () S 24 T (Lane currentLane = \(Lane\) pair.getValue\(\);) N
+() S 8 T () S 16 T () S 24 T (currentLane.paint\(g\);) N
+() N
+() S 8 T () S 16 T (}) N
+() N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(/**** road type dependent ****/) C n
+() p n
+() S 8 T () S
+(// contaaining all lanes) c n
+() p n
+() S 8 T () S
+(/***********************/) C n
+() p n
+() S 8 T () S
+(/***** road type independent *******/) C n
+() p 8 T () S
+(public) K
+( ) p
+(int) k
+( getId\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( this.roadId;) p n
+() N
+() S 8 T (}) N
+(Road.java) (Page 1/15) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() S 8 T () S
+(public) K
+( HashMap<Integer, Lane> getLanes\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( lanes;) p
+(// should return an arraylist) c n
+() p 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( update\(\) {) p n
+() S 8 T () S 16 T () S
+(// update all lanes belonging to this road) c n
+() p 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(int) k
+( getType\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( this.roadType;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(boolean) k
+( getBilateral\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( this.bilateral;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(protected) K
+( ) p
+(void) k
+( setBilateral\() p
+(boolean) k
+( bl\) {) p n
+() S 8 T () S 16 T (this.bilateral = bl;) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(// currently only supports connections between straight lanes) c n
+() p 8 T () S
+(public) K
+( ) p
+(static) K
+( ) p
+(void) k
+( connectLane\(Road currentRoad, ) p
+(int) k
+( currentLane,) p n
+() S 8 T () S 16 T () S 24 T (Road targetRoad, ) S
+(int) k
+( targetLane\) ) p
+(throws) K
+( UnknownConnectio) p n
+(nError {) N
+() N
+() S 8 T () S 16 T () S
+(if) K
+( \(\(currentRoad ) p
+(instanceof) K
+( StraightRoad && targetRoad ) p
+(instanceo) K n
+(f) S
+( StraightRoad\)\) {) p n
+() S 8 T () S 16 T () S 24 T (lineLineConnect\(currentRoad, currentLane, targetRoad, ta) N
+(rgetLane\);) N
+() N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(\(currentRoad ) p
+(instanceof) K
+( StraightRoad && targetRoad ) p
+(in) K n
+(stanceof) S
+( RoundRoad\)\) {) p n
+() N
+() S 8 T () S 16 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(currentRoad ) p
+(instanceof) K
+( RoundRoad) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (&& targetRoad ) S
+(instanceof) K
+( StraightRoad\) {) p n
+() N
+() S 8 T () S 16 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S
+(throw) K
+( ) p
+(new) K
+( UnknownConnectionError\(\);) p n
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(// sets connection state between the lane corresponding to the) c n
+() p 8 T () S 16 T () S
+(// currentLane in currentRoad and the corresponding targetLane, ) c n
+(in) N
+() p 8 T () S 16 T () S
+(// targetRoad) c n
+() p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(// lane connection logic between straight lines) c n
+() p 8 T () S
+(private) K
+( ) p
+(static) K
+( ) p
+(boolean) k
+( lineLineConnect\(Road currentRoad, ) p
+(int) k
+( currentLane) p n
+(,) N
+() S 8 T () S 16 T () S 24 T (Road targetRoad, ) S
+(int) k
+( targetLane\) ) p
+(throws) K
+( UnknownConnectio) p n
+(nError {) N
+() S 8 T () S 16 T (System.out.println\(") S
+(Start connecting) str
+("\);) p n
+() S 8 T () S 16 T (HashMap<Integer, Lane> sLanes = currentRoad.getLanes\(\);) N
+() S 8 T () S 16 T (HashMap<Integer, Lane> tLanes = targetRoad.getLanes\(\);) N
+() S 8 T () S 16 T (Point2D.Float intersectingStartPoint;) N
+() S 8 T () S 16 T (Point2D.Float intersectingControlPoint;) N
+() S 8 T () S 16 T (Point2D.Float intersectingEndPoint;) N
+() S 8 T () S 16 T () S
+(boolean) k
+( success = ) p
+(false) k
+(;) p n
+() S 8 T () S 16 T () S
+(boolean) k
+( overlapFound = ) p
+(false) k
+(;) p n
+() S 8 T () S 16 T () S
+(// checks if the roads actually has the lanes that are needed to) c n
+( be) N
+() p 8 T () S 16 T () S
+(// connected) c n
+() p 8 T () S 16 T () S
+(if) K
+( \(sLanes.containsKey\(currentLane\) && tLanes.containsKey\(target) p n
+(Lane\)\) {) N
+() S 8 T () S 16 T () S 24 T (System.out.println\(") S
+(Lanes in the roads found) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S
+(// get two most outer roads-> get most outer boundaries ) c n
+(of the two) N
+() p 8 T () S 16 T () S 24 T () S
+(// roads) c n
+(Road.java) (Page 2/15) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Road.java) (1/8) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S
+(// check if the closest outer boundary intersects with t) c n
+(he) N
+() p 8 T () S 16 T () S 24 T () S
+(// boundaries of the other road.) c n
+() p 8 T () S 16 T () S 24 T () S
+(// if it doesn't check if it works other way.) c n
+() p 8 T () S 16 T () S 24 T () S
+(// case where they are all even or all odd->) c n
+() p 8 T () S 16 T () S 24 T () S
+(// for one of the roads a1-a2, a3-a4) c n
+() p 8 T () S 16 T () S 24 T (Point2D.Float a1;) N
+() S 8 T () S 16 T () S 24 T (Point2D.Float a2;) N
+() S 8 T () S 16 T () S 24 T (Point2D.Float a3;) N
+() S 8 T () S 16 T () S 24 T (Point2D.Float a4;) N
+() N
+() S 8 T () S 16 T () S 24 T () S
+(// for another road b1-b2, b3-b4) c n
+() p 8 T () S 16 T () S 24 T (Point2D.Float b1;) N
+() S 8 T () S 16 T () S 24 T (Point2D.Float b2;) N
+() S 8 T () S 16 T () S 24 T (Point2D.Float b3;) N
+() S 8 T () S 16 T () S 24 T (Point2D.Float b4;) N
+() N
+() S 8 T () S 16 T () S 24 T () S
+(// for sLanes) c n
+() p 8 T () S 16 T () S 24 T (ArrayList<Integer> sortedS = ) S
+(new) K
+( ArrayList<Integer>\(sLan) p n
+(es.keySet\(\)\);) N
+() S 8 T () S 16 T () S 24 T (Collections.sort\(sortedS\);) N
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( highest = sortedS.get\(sortedS.size\(\) - 1\);) p n
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( modulus = highest % 2;) p n
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( nextHighest = -1;) p n
+() N
+() S 8 T () S 16 T () S 24 T () S
+(// ////////) c n
+() p 8 T () S 16 T () S 24 T () S
+(// ////////) c n
+() p 8 T () S 16 T () S 24 T () S
+(// start if) c n
+() p 8 T () S 16 T () S 24 T () S
+(if) K
+( \(currentRoad.getBilateral\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// bilateral get one lane with highest even key ) c n
+(and one with) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// highest odd key) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// start checking for nextHighest) c n
+() p 8 T () S 16 T () S 24 T () S 32 T (System.out.println\(") S
+(starting road is bilateral) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(modulus == 0\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.println\(") S
+(Starting highest==even) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// highest is even-> next highest should) c n
+( be odd since) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// bilateral) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(for) K
+( \() p
+(int) k
+( i = sortedS.size\(\) - 2; i >= 0;) p n
+( i--\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(if) K
+( \(sortedS.get\(i\) % 2 == 1\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nextHighest = sortedS.ge) N
+(t\(i\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// highest is even the outer line is ano) c n
+(ther addition of the) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// half offset vector) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// nextHighest is odd the outer line is ) c n
+(another subtraction) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// of the half offset vector) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base1 = sLanes.get\(highest) N
+(\).getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base2 = sLanes.get\(highest) N
+(\).getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float halfVector = getHalf\(base1) N
+(, base2\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane h = sLanes.get\(highest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane nh = sLanes.get\(nextHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a1 = ) S
+(new) K
+( Point2D.Float\(h.getStart\(\).x + ) p n
+(halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getStart\(\).y + halfVec) N
+(tor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a2 = ) S
+(new) K
+( Point2D.Float\(h.getEnd\(\).x + ha) p n
+(Road.java) (Page 3/15) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(lfVector.x,) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getEnd\(\).y + halfVecto) N
+(r.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a3 = ) S
+(new) K
+( Point2D.Float\(nh.getStart\(\).x -) p n
+( halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getStart\(\).y - halfVe) N
+(ctor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a4 = ) S
+(new) K
+( Point2D.Float\(nh.getEnd\(\).x - h) p n
+(alfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getEnd\(\).y - halfVect) N
+(or.y\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// highest is odd-> next highest should ) c n
+(be even since) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// bilateral) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.println\(") S
+(Starting highest== odd) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(for) K
+( \() p
+(int) k
+( i = sortedS.size\(\) - 2; i >= 0;) p n
+( i--\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(if) K
+( \(sortedS.get\(i\) % 2 == 0\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nextHighest = sortedS.ge) N
+(t\(i\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// highest is odd the outer line is anot) c n
+(her subtraction of) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// the half offset vector) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// nextHighest is even the outer line is) c n
+( another addition) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// of the half offset vector) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base1 = sLanes.get\(nextHig) N
+(hest\).getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base2 = sLanes.get\(nextHig) N
+(hest\).getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float halfVector = getHalf\(base1) N
+(, base2\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane h = sLanes.get\(highest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane nh = sLanes.get\(nextHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a1 = ) S
+(new) K
+( Point2D.Float\(h.getStart\(\).x - ) p n
+(halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getStart\(\).y - halfVec) N
+(tor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a2 = ) S
+(new) K
+( Point2D.Float\(h.getEnd\(\).x - ha) p n
+(lfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getEnd\(\).y - halfVecto) N
+(r.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a3 = ) S
+(new) K
+( Point2D.Float\(nh.getStart\(\).x +) p n
+( halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getStart\(\).y + halfVe) N
+(ctor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a4 = ) S
+(new) K
+( Point2D.Float\(nh.getEnd\(\).x + h) p n
+(alfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getEnd\(\).y + halfVect) N
+(or.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// end of bilateral sLane.) c n
+() p n
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// unilateral sLAne->get a lane with highest key) c n
+( and one with) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// the lowest key) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T (nextHighest = sortedS.get\(0\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(nextHighest % 2 == 0\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.println\(") S
+(Starting lane is even unilatera) str n
+(l) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// even lanes) c n
+(Road.java) (Page 4/15) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Road.java) (2/8) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5-6) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// one outer line is highest + offset) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// one outer line is nextHighest - offse) c n
+(t) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base1 = sLanes.get\(nextHig) N
+(hest\).getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base2 = sLanes.get\(nextHig) N
+(hest\).getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float halfVector = getHalf\(base1) N
+(, base2\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane h = sLanes.get\(highest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane nh = sLanes.get\(nextHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a1 = ) S
+(new) K
+( Point2D.Float\(h.getStart\(\).x + ) p n
+(halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getStart\(\).y + halfVec) N
+(tor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a2 = ) S
+(new) K
+( Point2D.Float\(h.getEnd\(\).x + ha) p n
+(lfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getEnd\(\).y + halfVecto) N
+(r.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a3 = ) S
+(new) K
+( Point2D.Float\(nh.getStart\(\).x -) p n
+( halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getStart\(\).y - halfVe) N
+(ctor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a4 = ) S
+(new) K
+( Point2D.Float\(nh.getEnd\(\).x - h) p n
+(alfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getEnd\(\).y - halfVect) N
+(or.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.println\(") S
+(Starting lane is odd unilateral) str
+() p n
+("\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// odd lanes) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// one outer line is highest - offset) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// one outer line is nextHighest + offse) c n
+(t) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base1 = sLanes.get\(nextHig) N
+(hest\).getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base2 = sLanes.get\(nextHig) N
+(hest\).getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float halfVector = getHalf\(base1) N
+(, base2\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane h = sLanes.get\(highest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane nh = sLanes.get\(nextHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a1 = ) S
+(new) K
+( Point2D.Float\(h.getStart\(\).x - ) p n
+(halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getStart\(\).y - halfVec) N
+(tor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a2 = ) S
+(new) K
+( Point2D.Float\(h.getEnd\(\).x - ha) p n
+(lfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getEnd\(\).y - halfVecto) N
+(r.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a3 = ) S
+(new) K
+( Point2D.Float\(nh.getStart\(\).x +) p n
+( halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getStart\(\).y + halfVe) N
+(ctor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (a4 = ) S
+(new) K
+( Point2D.Float\(nh.getEnd\(\).x + h) p n
+(alfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getEnd\(\).y + halfVect) N
+(or.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(nextHighest == -1\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(throw) K
+( ) p
+(new) K
+( UnknownConnectionError\(\);) p n
+() S 8 T () S 16 T () S 24 T () S
+(// END for sLane) c n
+() p 8 T () S 16 T () S 24 T () S
+(// //////////////) c n
+() p 8 T () S 16 T () S 24 T () S
+(// //////////////) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S
+(// for targetRoad) c n
+() p 8 T () S 16 T () S 24 T (ArrayList<Integer> sortedT = ) S
+(new) K
+( ArrayList<Integer>\(tLan) p n
+(Road.java) (Page 5/15) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(es.keySet\(\)\);) p n
+() S 8 T () S 16 T () S 24 T (Collections.sort\(sortedT\);) N
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( tHighest = sortedT.get\(sortedT.size\(\) - 1\);) p n
+() N
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( tModulus = tHighest % 2;) p n
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( tNextHighest = -1;) p n
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(targetRoad.getBilateral\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// bilateral get one lane with highest even key ) c n
+(and one with) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// highest odd key) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(tModulus == 0\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// highest is even-> next highest should) c n
+( be odd since) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// bilateral) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(for) K
+( \() p
+(int) k
+( i = sortedT.size\(\) - 2; i >= 0;) p n
+( i--\) {) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(if) K
+( \(sortedT.get\(i\) % 2 == 1\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (tNextHighest = sortedT.g) N
+(et\(i\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// highest is even the outer line is ano) c n
+(ther addition of the) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// half offset vector) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// nextHighest is odd the outer line is ) c n
+(another subtraction) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// of the half offset vector) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base1 = tLanes.get\(tHighes) N
+(t\).getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base2 = tLanes.get\(tHighes) N
+(t\).getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float halfVector = getHalf\(base1) N
+(, base2\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane h = tLanes.get\(tHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane nh = tLanes.get\(tNextHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b1 = ) S
+(new) K
+( Point2D.Float\(h.getStart\(\).x + ) p n
+(halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getStart\(\).y + halfVec) N
+(tor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b2 = ) S
+(new) K
+( Point2D.Float\(h.getEnd\(\).x + ha) p n
+(lfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getEnd\(\).y + halfVecto) N
+(r.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b3 = ) S
+(new) K
+( Point2D.Float\(nh.getStart\(\).x -) p n
+( halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getStart\(\).y - halfVe) N
+(ctor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b4 = ) S
+(new) K
+( Point2D.Float\(nh.getEnd\(\).x - h) p n
+(alfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getEnd\(\).y - halfVect) N
+(or.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// highest is odd-> next highest should ) c n
+(be even since) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// bilateral) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(for) K
+( \() p
+(int) k
+( i = sortedT.size\(\) - 2; i >= 0;) p n
+( i--\) {) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(if) K
+( \(sortedT.get\(i\) % 2 == 0\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (tNextHighest = sortedT.g) N
+(et\(i\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S
+(break) K
+(;) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+(Road.java) (Page 6/15) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Road.java) (3/8) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7-8) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// highest is odd the outer line is anot) c n
+(her subtraction of) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// the half offset vector) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// nextHighest is even the outer line is) c n
+( another addition) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// of the half offset vector) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base1 = tLanes.get\(tNextHi) N
+(ghest\).getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base2 = tLanes.get\(tNextHi) N
+(ghest\).getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float halfVector = getHalf\(base1) N
+(, base2\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane h = tLanes.get\(tHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane nh = tLanes.get\(tNextHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b1 = ) S
+(new) K
+( Point2D.Float\(h.getStart\(\).x - ) p n
+(halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getStart\(\).y - halfVec) N
+(tor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b2 = ) S
+(new) K
+( Point2D.Float\(h.getEnd\(\).x - ha) p n
+(lfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getEnd\(\).y - halfVecto) N
+(r.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b3 = ) S
+(new) K
+( Point2D.Float\(nh.getStart\(\).x +) p n
+( halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getStart\(\).y + halfVe) N
+(ctor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b4 = ) S
+(new) K
+( Point2D.Float\(nh.getEnd\(\).x + h) p n
+(alfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getEnd\(\).y + halfVect) N
+(or.y\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// unilateral get a lane with highest key and on) c n
+(e with the) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// lowest key) c n
+() p 8 T () S 16 T () S 24 T () S 32 T (tNextHighest = sortedT.get\(0\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(tNextHighest % 2 == 0\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// even lanes) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// one outer line is highest + offset) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// one outer line is nextHighest - offse) c n
+(t) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base1 = tLanes.get\(tNextHi) N
+(ghest\).getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base2 = tLanes.get\(tNextHi) N
+(ghest\).getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float halfVector = getHalf\(base1) N
+(, base2\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane h = tLanes.get\(tHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane nh = tLanes.get\(tNextHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b1 = ) S
+(new) K
+( Point2D.Float\(h.getStart\(\).x + ) p n
+(halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getStart\(\).y + halfVec) N
+(tor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b2 = ) S
+(new) K
+( Point2D.Float\(h.getEnd\(\).x + ha) p n
+(lfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getEnd\(\).y + halfVecto) N
+(r.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b3 = ) S
+(new) K
+( Point2D.Float\(nh.getStart\(\).x -) p n
+( halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getStart\(\).y - halfVe) N
+(ctor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b4 = ) S
+(new) K
+( Point2D.Float\(nh.getEnd\(\).x - h) p n
+(alfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getEnd\(\).y - halfVect) N
+(or.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// odd lanes) c n
+(Road.java) (Page 7/15) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// one outer line is highest - offset) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// one outer line is nextHighest + offse) c n
+(t) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane h = tLanes.get\(tHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Lane nh = tLanes.get\(tNextHighest\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base1 = nh.getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float base2 = nh.getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float halfVector = getHalf\(base1) N
+(, base2\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b1 = ) S
+(new) K
+( Point2D.Float\(h.getStart\(\).x - ) p n
+(halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getStart\(\).y - halfVec) N
+(tor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b2 = ) S
+(new) K
+( Point2D.Float\(h.getEnd\(\).x - ha) p n
+(lfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (h.getEnd\(\).y - halfVecto) N
+(r.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b3 = ) S
+(new) K
+( Point2D.Float\(nh.getStart\(\).x +) p n
+( halfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getStart\(\).y + halfVe) N
+(ctor.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (b4 = ) S
+(new) K
+( Point2D.Float\(nh.getEnd\(\).x + h) p n
+(alfVector.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (nh.getEnd\(\).y + halfVect) N
+(or.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T () S 24 T () S
+(// now see if a1-a2, a3-a4 intersects with b1-b2 or b3-b) c n
+(4) N
+() p 8 T () S 16 T () S 24 T () S
+(// or if b1-b2 and b3-b4 overlaps with a1-a2 or a3-a4) c n
+() p n
+() S 8 T () S 16 T () S 24 T (Line2D.Float line1 = ) S
+(new) K
+( Line2D.Float\(a1, a2\);) p n
+() S 8 T () S 16 T () S 24 T (Line2D.Float line2 = ) S
+(new) K
+( Line2D.Float\(a3, a4\);) p n
+() S 8 T () S 16 T () S 24 T (Line2D.Float line3 = ) S
+(new) K
+( Line2D.Float\(b1, b2\);) p n
+() S 8 T () S 16 T () S 24 T (Line2D.Float line4 = ) S
+(new) K
+( Line2D.Float\(b3, b4\);) p n
+() N
+() S 8 T () S 16 T () S 24 T () S
+(// if the line overlaps check if the overlapped segment ) c n
+(is closest) N
+() p 8 T () S 16 T () S 24 T () S
+(// to the starting lane's starting point) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(\(line1.intersectsLine\(line3\) && line2.intersectsLine) p n
+(\(line3\)\)\) {) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (overlapFound = ) S
+(true) k
+(;) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// check distance between the starting point of ) c n
+(the starting) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// lane and line3, as well as the distance betwe) c n
+(en the same) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// point and line4. If line 3 is the closest int) c n
+(ersection) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// between this line is the starting point) c n
+() p n
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(\(line1.intersectsLine\(line4\) && line2) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (.intersectsLine\(line4\)\)\) {) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (overlapFound = ) S
+(true) k
+(;) p n
+() N
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(\(line3.intersectsLine\(line1\) && line4) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (.intersectsLine\(line1\)\)\) {) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (overlapFound = ) S
+(true) k
+(;) p n
+() N
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(\(line3.intersectsLine\(line2\) && line4) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (.intersectsLine\(line2\)\)\) {) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (overlapFound = ) S
+(true) k
+(;) p n
+(Road.java) (Page 8/15) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Road.java) (4/8) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (9-10) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() S 8 T () S 16 T () S 24 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (System.out.println\(") S
+(overlapping not found) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(return) K
+( ) p
+(false) k
+(;) p n
+() S 8 T () S 16 T () S 24 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T () S
+(if) K
+( \(overlapFound\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (System.out) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (.println\(") S
+(Finding closest outerline of the t) str n
+(arget road) S
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// get starting lane's outer lines) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// find two intersection point with the closest ) c n
+(road outerline) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// of the target road) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// get the vector that is perpendicular to the o) c n
+(uter line that) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// previously found intersection point lines on) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// get intersection of the previously found vect) c n
+(or and the) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// starting lane's vector-> starting point of th) c n
+(e connection) N
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// get intersection between the starting lane ve) c n
+(ctor and target) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// lane vector-> control point of the quadratic ) c n
+(bezier) N
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(// get a point that lies on target lane's vector) c n
+( with the) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// distance of the displacement between the two ) c n
+(previously found) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(// points-> end point of the quadratic bezier) c n
+() p 8 T () S 16 T () S 24 T () S 32 T (Lane startingL = sLanes.get\(currentLane\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Lane endingL = tLanes.get\(targetLane\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float slStarting = startingL.getStart\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float slEnding = startingL.getEnd\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float halfVector = getHalf\(slStarting, s) N
+(lEnding\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float sla1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float sla2;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float sla3;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float sla4;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (sla1 = ) S
+(new) K
+( Point2D.Float\(slStarting.x + halfVect) p n
+(or.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (slStarting.y + halfVector.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (sla2 = ) S
+(new) K
+( Point2D.Float\(slEnding.x + halfVector) p n
+(.x, slEnding.y) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (+ halfVector.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (sla3 = ) S
+(new) K
+( Point2D.Float\(slStarting.x - halfVect) p n
+(or.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (slStarting.y - halfVector.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (sla4 = ) S
+(new) K
+( Point2D.Float\(slEnding.x - halfVector) p n
+(.x, slEnding.y) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (- halfVector.y\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (Line2D.Float sLine1 = ) S
+(new) K
+( Line2D.Float\(sla1, sla) p n
+(2\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Line2D.Float sLine2 = ) S
+(new) K
+( Line2D.Float\(sla3, sla) p n
+(4\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float i1 = linesolver.checkIntersection\() N
+(slStarting,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (slEnding, \(Point2D.Float\) line3.) N
+(getP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (\(Point2D.Float\) line3.getP2\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float i2 = linesolver.checkIntersection\() N
+(slStarting,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (slEnding, \(Point2D.Float\) line4.) N
+(getP1\(\),) N
+(Road.java) (Page 9/15) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (\(Point2D.Float\) line4.getP2\(\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(float) k
+( d1 = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\(\(slStartin) p n
+(g.x - i1.x\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (2.0\) + Math.pow\(slStarting.y - i) N
+(1.y, 2.0\)\); ) S
+(// length) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T () S 80 T () N
+() S 0 T () S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// between) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T () S 80 T () N
+() S 0 T () S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// line 3) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S
+(float) k
+( d2 = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\(\(slStartin) p n
+(g.x - i2.x\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (2.0\) + Math.pow\(slStarting.y - i) N
+(2.y, 2.0\)\); ) S
+(// length) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T () S 80 T () N
+() S 0 T () S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// between) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float closestPoint;) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Line2D.Float closestLine;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(d1 > d2\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// line 4 is the closest outer line) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// get intersection between line 4 and l) c n
+(ine 1,line 2) N
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float ii1 = linesolver.checkInte) N
+(rsection\() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) line4.ge) N
+(tP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) line4.ge) N
+(tP2\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) sLine1.g) N
+(etP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) sLine1.g) N
+(etP2\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float ii2 = linesolver.checkInte) N
+(rsection\() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) line4.ge) N
+(tP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) line4.ge) N
+(tP2\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) sLine2.g) N
+(etP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) sLine2.g) N
+(etP2\(\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(float) k
+( dd1 = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(slStarting.x - ii1.x\), ) N
+(2.0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (+ Math.pow\(slStarting.y ) N
+(- ii1.y, 2.0\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(float) k
+( dd2 = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(slStarting.x - ii2.x\), ) N
+(2.0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (+ Math.pow\(slStarting.y ) N
+(- ii2.y, 2.0\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(dd1 > dd2\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// ii2 is the closest intersecti) c n
+(on point) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// lies on line2) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestPoint = ii2;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestLine = sLine2;) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(dd2 > dd1\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// ii1 is the closest intersecti) c n
+(on point) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// lies on line1) c n
+() p n
+(Road.java) (Page 10/15) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Road.java) (5/8) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (11-12) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestPoint = ii1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestLine = sLine1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// they are the same so chose wh) c n
+(ich ever point) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// lies on line1) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestPoint = ii1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestLine = sLine1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(d2 > d1\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// line 3 is the shorted outer line) c n
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(// get intersection between line 3 and l) c n
+(ine 1, line 2) N
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float ii1 = linesolver.checkInte) N
+(rsection\() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) line3.ge) N
+(tP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) line3.ge) N
+(tP2\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) sLine1.g) N
+(etP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) sLine1.g) N
+(etP2\(\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Point2D.Float ii2 = linesolver.checkInte) N
+(rsection\() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) line3.ge) N
+(tP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) line3.ge) N
+(tP2\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) sLine2.g) N
+(etP1\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(Point2D.Float\) sLine2.g) N
+(etP2\(\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(float) k
+( dd1 = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(slStarting.x - ii1.x\), ) N
+(2.0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (+ Math.pow\(slStarting.y ) N
+(- ii1.y, 2.0\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(float) k
+( dd2 = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (\(slStarting.x - ii2.x\), ) N
+(2.0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (+ Math.pow\(slStarting.y ) N
+(- ii2.y, 2.0\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(if) K
+( \(dd1 > dd2\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// ii2 is the closest intersecti) c n
+(on point) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// lies on line2) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestPoint = ii2;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestLine = sLine2;) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (} ) S
+(else) K
+( ) p
+(if) K
+( \(dd2 > dd1\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// ii1 is the closest intersecti) c n
+(on point) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// lies on line1) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestPoint = ii1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestLine = sLine1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// they are the same so chose wh) c n
+(ich ever point) N
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S
+(// lies on line1) c n
+() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestPoint = ii1;) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (closestLine = sLine1;) N
+(Road.java) (Page 11/15) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T (}) N
+() S 8 T () S 16 T () S 24 T () S 32 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S
+(throw) K
+( ) p
+(new) K
+( UnknownConnectionError\(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float closestVec = ) S
+(new) K
+( Point2D.Float\() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (\(\(Point2D.Float\) closestLine.get) N
+(P1\(\)\).x) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (- closestPoint.x) N
+(,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (\(\(Point2D.Float\) closestLine.get) N
+(P1\(\)\).y) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (- closestPoint.y) N
+(\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (intersectingStartPoint = ) S
+(new) K
+( Point2D.Float\() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (\(\(Point2D.Float\) startingL.getSt) N
+(art\(\)\).x - closestVec.x,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (\(\(Point2D.Float\) startingL.getSt) N
+(art\(\)\).y - closestVec.y\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (intersectingControlPoint = linesolver.checkInter) N
+(section\() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (slStarting, slEnding, endingL.ge) N
+(tStart\(\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (endingL.getEnd\(\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float iVec = ) S
+(new) K
+( Point2D.Float\(intersect) p n
+(ingStartPoint.x) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (- intersectingControlPoint.x, in) N
+(tersectingStartPoint.y) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (- intersectingControlPoint.y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(float) k
+( scd = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\(\(iVec.x\),) p n
+( 2.0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (+ Math.pow\(iVec.y, 2.0\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Point2D.Float tVec = ) S
+(new) K
+( Point2D.Float\(endingL.g) p n
+(etStart\(\).x) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (- endingL.getEnd\(\).x, endingL.ge) N
+(tStart\(\).y) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (- endingL.getEnd\(\).y\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(float) k
+( tVecD = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\(\(tVec.x) p n
+(\), 2.0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (+ Math.pow\(tVec.y, 2.0\)\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (intersectingEndPoint = ) S
+(new) K
+( Point2D.Float\() p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (intersectingControlPoint.x) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (+ \(\(endingL.getE) N
+(nd\(\).x - endingL.getStart\(\).x\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T () S 80 T () N
+(/ tVecD * scd\),) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (intersectingControlPoint.y) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (+ \(\(endingL.getE) N
+(nd\(\).y - endingL.getStart\(\).y\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T () S 72 T () S 80 T () N
+(/ tVecD * scd\)\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (ConnectionPoint cp = ) S
+(new) K
+( ConnectionPoint\(current) p n
+(Road,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (startingL, intersectingStartPoin) N
+(t\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Connection cn = ) S
+(new) K
+( Connection\(currentRoad, star) p n
+(tingL,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (targetRoad, endingL, cp, interse) N
+(ctingStartPoint,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (intersectingEndPoint, intersecti) N
+(ngControlPoint\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (success = startingL.addConnectionPoint\(cp, cn\);) N
+() S 8 T () S 16 T () S 24 T (}) N
+() N
+(Road.java) (Page 12/15) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Road.java) (6/8) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (13-14) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S
+(return) K
+( success;) p n
+() S 8 T () S 16 T (} ) S
+(else) K
+( {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S
+(throw) K
+( ) p
+(new) K
+( UnknownConnectionError\(\);) p n
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(// end if) c n
+() p 8 T () S 16 T () S
+(// //////////) c n
+() p 8 T () S 16 T () S
+(// ////////////) c n
+() p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(private) K
+( ) p
+(static) K
+( Point2D.Float getHalf\(Point2D.Float base1,) p n
+() S 8 T () S 16 T () S 24 T (Point2D.Float base2\) {) N
+() S 8 T () S 16 T (Point2D.Float vector = ) S
+(new) K
+( Point2D.Float\(base2.x - base1.x, base) p n
+(2.y) N
+() S 8 T () S 16 T () S 24 T () S 32 T (- base1.y\);) N
+() S 8 T () S 16 T () S
+(// System.out.println\("Vector: " + vector\);) c n
+() p 8 T () S 16 T () S
+(float) k
+( vectorLength = \() p
+(float) k
+(\) Math.sqrt\(Math.pow\(vector.x, 2.0\)) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (+ Math.pow\(vector.y, 2.0\)\);) N
+() S 8 T () S 16 T () S
+(// System.out.println\("Length: " + vectorLength\);) c n
+() p 8 T () S 16 T (Point2D.Float normalVector = ) S
+(new) K
+( Point2D.Float\(vector.x / vector) p n
+(Length,) N
+() S 8 T () S 16 T () S 24 T () S 32 T (vector.y / vectorLength\);) N
+() S 8 T () S 16 T () S
+(// System.out.println\("x calculation: " + normalVector.x +) c n
+() p 8 T () S 16 T () S
+(// "*") c n
+() p 8 T () S 16 T () S
+(// + perpenMat[0][0] + " + " + normalVector.y + "*") c n
+() p 8 T () S 16 T () S
+(// + perpenMat[1][0]\);) c n
+() p 8 T () S 16 T (Point2D.Float perpenVector = ) S
+(new) K
+( Point2D.Float\(normalVector.x) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (* perpenMat[0][0] + normalVector.y * perpenMat[1) N
+(][0],) N
+() S 8 T () S 16 T () S 24 T () S 32 T (normalVector.x * perpenMat[0][1] + normalVector.) N
+(y) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (* perpenMat[1][1]\);) N
+() S 8 T () S 16 T () S
+(// System.out.println\("Perpen vector: " + perpenVector\);) c n
+() p 8 T () S 16 T (Point2D.Float halfScaled = ) S
+(new) K
+( Point2D.Float\(perpenVector.x) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (* Road.roadWidth / 2, perpenVector.y * Road.road) N
+(Width / 2\);) N
+() S 8 T () S 16 T () S
+(return) K
+( halfScaled;) p n
+() N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(/****************************/) C n
+() p 8 T () S
+(public) K
+( ) p
+(static) K
+( ArrayList<Road> bfsParks\(Road currentRoad,) p n
+() S 8 T () S 16 T () S 24 T (CarPark destinationPark\) {) N
+() S 8 T () S 16 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T () S
+(return) K
+( ) p
+(null) k
+(;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( CarWorld getWorld\(\) {) p n
+() S 8 T () S 16 T () S
+(return) K
+( this.world;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ArrayList<Connection> getConnections\(\) {) p n
+() S 8 T () S 16 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T (ArrayList<Connection> cal = ) S
+(new) K
+( ArrayList<Connection>\(\);) p n
+() S 8 T () S 16 T (Iterator<Entry<Integer, Lane>> lit = this.lanes.entrySet\(\).itera) N
+(tor\(\);) N
+() S 8 T () S 16 T () S
+(while) K
+( \(lit.hasNext\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T (Map.Entry<Integer, Lane> lp = lit.next\(\);) N
+() S 8 T () S 16 T () S 24 T (Lane currentLane = lp.getValue\(\);) N
+() S 8 T () S 16 T () S 24 T (Iterator<Entry<Point2D.Float, ConnectionPoint>> cit = cu) N
+(rrentLane) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (.getConnectionPoints\(\).entrySet\(\).iterat) N
+(or\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(while) K
+( \(cit.hasNext\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (Map.Entry<Point2D.Float, ConnectionPoint> cp = c) N
+(it.next\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (ConnectionPoint currentPoint = cp.getValue\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Iterator<Entry<Lane, Connection>> conIt = curren) N
+(Road.java) (Page 13/15) (Mar 26, 15 1:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(tPoint) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (.getConnections\(\).entrySet\(\).ite) N
+(rator\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(while) K
+( \(conIt.hasNext\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Map.Entry<Lane, Connection> conP = conIt) N
+(.next\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (Connection currentConnection = conP.getV) N
+(alue\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (cal.add\(currentConnection\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (}) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () S
+(return) K
+( cal;) p n
+() S 8 T (}) N
+() N
+() S 8 T () S
+(// car parks are only allowed to exist on straight roads) c n
+() p 8 T () S
+(public) K
+( ) p
+(void) k
+( setCarParks\() p
+(int) k
+( s\) {) p n
+() S 8 T () S 16 T () S
+(if) K
+( \() p
+(this) k
+( ) p
+(instanceof) K
+( StraightRoad\) {) p n
+() S 8 T () S 16 T () S 24 T (Iterator<Entry<Integer, Lane>> lit = this.lanes.entrySet) N
+(\(\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (.iterator\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(while) K
+( \(lit.hasNext\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (Map.Entry<Integer, Lane> lp = lit.next\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Lane cl = lp.getValue\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(int) k
+( laneKey = cl.getLaneKey\(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(laneKey == s && !cl.getHasPark\(\)\) {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (CarPark newPark = ) S
+(new) K
+( CarPark\(cl, CarPar) p n
+(k.START, this.world\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (this.world.getParks\(\).add\(newPark\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (System.out.println\(") S
+(Car park spawned) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (cl.setHasPark\() S
+(true) k
+(\);) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (}) N
+() N
+() S 8 T () S 16 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T (System.out.println\(") S
+(road type doesn't support car park) str
+("\);) p n
+() S 8 T () S 16 T (}) N
+() N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(//currently exit point can only exist on straight road) c n
+() p 8 T () S
+(public) K
+( ) p
+(void) k
+( setEnding\() p
+(int) k
+( s, ) p
+(boolean) k
+( b\) {) p n
+() S 8 T () S 16 T () S
+(if) K
+( \() p
+(this) k
+( ) p
+(instanceof) K
+( StraightRoad\) {) p n
+() S 8 T () S 16 T () S 24 T (System.out.println\(") S
+(Straight road detected) str
+("\);) p n
+() S 8 T () S 16 T () S 24 T () S
+(int) k
+( remainder = s % 2;) p n
+() S 8 T () S 16 T () S 24 T (Iterator<Entry<Integer, Lane>> lit = this.lanes.entrySet) N
+(\(\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (.iterator\(\);) N
+() S 8 T () S 16 T () S 24 T () S
+(while) K
+( \(lit.hasNext\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T () S 32 T (Map.Entry<Integer, Lane> lp = lit.next\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T (Lane cl = lp.getValue\(\);) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(int) k
+( laneKey = cl.getLaneKey\(\);) p n
+() S 8 T () S 16 T () S 24 T () S 32 T () S
+(if) K
+( \(laneKey % 2 == remainder\) {) p n
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (cl.setEnding\(b\);) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (}) N
+() S 8 T () S 16 T () S 24 T (}) N
+() N
+() S 8 T () S 16 T (} ) S
+(else) K
+( {) p n
+() S 8 T () S 16 T () S 24 T (System.out.println\(") S
+(road type doesn't support car park) str
+("\);) p n
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() N
+() S 8 T () S
+(public) K
+( ) p
+(void) k
+( paintBorders\(Graphics g\) {) p n
+() S 8 T () S 16 T () S
+(// TODO Auto-generated method stub) c n
+() p 8 T () S 16 T (Iterator<Entry<Integer, Lane>> lit = lanes.entrySet\(\).iterator\(\)) N
+(Road.java) (Page 14/15) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Road.java) (7/8) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (15) 8
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(;) p n
+() N
+() S 8 T () S 16 T () S
+(while) K
+( \(lit.hasNext\(\)\) {) p n
+() S 8 T () S 16 T () S 24 T (Lane currentLane = lit.next\(\).getValue\(\);) N
+() S 8 T () S 16 T () S 24 T (currentLane.paintBorders\(g\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() N
+(}) N
+(Road.java) (Page 15/15) (Mar 26, 15 1:15) title
+border
+grestore
+(Printed by Tanda Kabanda) rhead
+(./src/model/Road.java) (8/8) (Thursday March 26, 2015) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

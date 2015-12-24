@@ -1,0 +1,529 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,pdftex]{geometry}	% Use A4 paper margins
+\usepackage[english]{babel}
+\usepackage{xcolor,enumitem} 
+\usepackage{graphicx}
+\usepackage{array} % for m[{x cm} in tables
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{colortbl}
+
+\begin{document}
+	\begin{titlepage}
+	\center
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 
+\includegraphics[scale=0.2]{kingslogo}\\
+\HRule \\[0.4cm]
+{\huge \bfseries Final Report}\\[0.4cm]
+	\ Team NERD
+\HRule \\[1.5cm]
+{\large \today}\\[10cm] 
+
+\begin{minipage}{0.4\textwidth}
+	\begin{flushleft} \large
+		\emph{Authors:}\\
+			Mark Azer 1271398/1\\
+			Jie Ding 1412858/2 \\
+			Tanda Kabanda 1472443/1 \\
+			Inyeol Sohn 1466384/1 \\
+			Qiu Yun 1430295/1 \\
+	\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+	\begin{flushright} \large
+		\emph{Lecturer:} \\
+		Dr. Laurence Tratt
+	\end{flushright}
+\end{minipage}\\[4cm]
+	
+	\end{titlepage}
+\tableofcontents
+\newpage
+	
+\section{Introduction} %Introduce project and aim, describe the context for the work and the problem you are addressing. Briely summarise what you achieved in the project
+This report is about the related researches, progression, development and overall outcome of the traffic simulator produced by Team\_Nerd. The group’s system, CarSim, attempts at addressing the issue of finding optimal traffic network configurations by simulating traffic, specifically traffic light configurations of road networks in the current version. The report is structured into six sections. This first section is an introduction to the project, and the second section of the report discusses the literature/ application reviews in the preparation of the project. The third section explains the requirements and designs, and how they have changed throughout the project cycle. The fourth section of the report is discussion on the implementation details of early testing prototypes and current version of the simulator. The fifth section outlines how the team was organized throughout the project and the work load division, providing insight into the team work throughout project. The sixth section is a technical evaluation of the system including the methods used to test the system. It also includes the lessons learned about program development, group work, possibly future works and the grades given to each member of the team. The last sections are the references to sources used throughout the report and appendices of all additional relevant documents such as class diagrams, Gantt chart and documents that supported the system design of the application. 
+
+Overall, this introduction should outline what is to be expected throughout the entire report which as a whole will demonstrate what as a group have achieved throughout the project and give insight into how the team worked together to do so.
+
+\subsection{Objectives}
+The main objective of this application is to build a stable traffic simulation system which is in accordance with the UK traffic regulation. For the system itself, it should be able to simulate real life like traffic behaviours  and road networks of  acceptable complexity.  The system also should be able to be used to analyse performance of the current traffic configuration and present them to the user.
+
+\section{Review} %Examples of systems and dicussion of them compared to what we are creating.
+
+The group reviewed a range of different existing traffic simulators of different functionality, accuracy, and complexity. One of the application reviewed is   ‘TransModeller’~\cite{TransM}, which seems to be able to model complex level of traffic network, traffic behaviours, and functionalities to analyze the result of traffic configurations in depth. It supports different types of views, one of them being 3d rendering of the road networks stored in the Geographic database of the application. From this system, the group got an insight to how sophisticated a car simulation program can get as seen in Figure~\ref{subfig:exTrafficSim1} and the level of complexity expected from a commercial level traffic simulator.  Another example reviewed is the java Applet traffic simulation created by Kelly Liu \cite{Kelly} as seen in figure~\ref{subfig:exTrafficSim2}. The system simulates very simplified traffic behavior and regulations, over simple intersections. There are also two graphs to illustrate car flow and traffic light color changes.
+\begin{figure}[!htb]
+		\subfloat[short for lof][TransModeller Traffic Simulation Software \cite{TransM}]{
+			\setlength{\fboxsep}{0pt}%
+			\setlength{\fboxrule}{1pt}%
+			\fbox{\includegraphics[width=0.45\linewidth]{TransModel}}
+			\label{subfig:exTrafficSim1}
+		}
+		\subfloat[short for lof][Kelly Liu Traffic Simulation \cite{Kelly}]{
+			\setlength{\fboxsep}{0pt}%
+			\setlength{\fboxrule}{1pt}%
+			\fbox{\includegraphics[width=8cm, height=6cm]{kellyexample}}
+			\label{subfig:exTrafficSim2}
+		}
+		\caption[short for lof]{Examples of existing systems}
+		\label{fig:Existing Applications}
+	\end{figure}
+
+However, this system is too simple to have a useful application of its use. First of all, all of roads have been painted directly, meaning less flexibility in providing the type of the road networks it can simulate. Secondly, the cars moves are far from being realistic. Another disadvantage is that it does not allow too many configurations for user to interact with for the simulation to be meaningful. It was essential for the group to review these existing examples as it provides insight into what features different simulators provide, to be able to set realistic scope of the project.
+\newpage
+\section{Requirements and Design} %Describe the requirements you set for your project at the beginning and the design you have taken for your project. Focus on why you decided to tackle the problem in the way you did, and what effects that had on the design. You may also wish to mention the impact of team-working on your requirements and design.
+\textbf{ List and explanation of the significant requirements that were introduced to the system during the development:}
+\begin{center}
+\begin{table}[!htb]
+	\begin{tabular}{|m{4cm}|m{11cm}|}
+		 \hline
+		\multicolumn{2}{ |>{\columncolor[gray]{0.8}}c|}{\textbf{Requirements}} \\ 
+		\hline 
+		 \textbf{Requirement} & \textbf{Description}\\ \hline
+		 Dynamic Traffic Behaviours & Cars of the system need to act logically according to the changes of their surroundings.  \\ \hline
+		 Control over intervals of traffic lights. &  Users should be able to control intervals of traffic lights in simulation. \\ \hline
+		 Analysis of traffic configuration under simulation & 
+Simulation needs to provide meaningful information regarding the current simulation that can indicate performance of the current traffic flow to the user.
+
+ \\ \hline
+		 Network of roads &  Simulation should be able to model connection between roads allowing cars to interchange between them
+ \\ \hline
+		 Understandable level of car moving physics &  Quality of the simulation depends on accuracy of the physics of the world model of the simulation is. Physics of the simulator should be acceptable i.e. not too different from how it would be in real world.  \\ \hline
+		Multiple type of roads & Simulator needs to be able to model different types of roads, such as straight roads, roundabouts, or curved roads.
+ \\ \hline
+		 Control over numbers of cars in traffic network & Users should be able to control the density of the traffic.\\ \hline
+		 Ease of traffic network construction & Traffic network for simulation should be easy to create. This means creation of roads, lanes and the connections between them should not be complex but reusable.\\ \hline
+		 Adding and removing traffic lights. & Users should be able to add or remove traffic lights on desired position of the traffic simulation.\\ \hline
+		 GUI & Simulation should have graphical representation, as well graphical interface to manipulate traffic configurations.  \\ \hline
+	\end{tabular}
+	\caption{Requirements Table}
+	\label{table:RequriementsTable}
+	\end{table}
+\end{center}
+
+\subsection{Design decisions of the project}
+This section tries to discuss and justify significant design decisions of the project in an attempt to meet the requirements.
+For the system to show dynamic behaviour of traffic entities, the cars within the simulation need to be able to percept tge environment, evaluate what has been perceived, and make decisions based on this evaluation. The world perception sequence of a car would need to include information of the entities, such as the cars, traffic lights, and the current status itself is in. The priorities of the different information should be evaluated, allowing the car to decide what it needs to do dynamically during simulation. Logical movement of the cars of the project is defined as movement that does not result to collision between cars unless the traffic lights are causing the collision.
+To build a maintainable project with graphical user interface, the group decided to develop the project under Model View Controller architecture in Java Swing. This allowed development of the graphical, and the model modules of the simulation to be developed and tested separately. In addition, code will need to be structured in a certain way to promote reusability which is necessary for simple creation and connection of the networks i.e. different types of road and lanes can be treated the same when required to, meaning hierarchy and polymorphism of classes need to be utilized.\\
+To allow easy configuration of the simulation, the view of the main simulation should be divided into different sections; a section showing state of the world to the users graphically; and an interact-able interface section where the user will control the simulation. \\
+The group had a number of discussions about the project Figure~\ref{fig:InitialClassDiagram} illustrates the groups initials ideas towards the design of the system.
+\begin{center}
+\begin{figure}[!htb]
+		\setlength{\fboxsep}{0pt}%
+\setlength{\fboxrule}{1pt}%
+\fbox{\includegraphics[width=1\linewidth]{initialclassdiagram}}
+	\caption{Initial Class Diagram}
+	\label{fig:InitialClassDiagram}
+\end{figure}
+\end{center}
+
+Overall, this section has outlined the requirements set by the group at the beginning of the project and what the group has done to tackle these problems and the effects some requirements had on the design towards further development. 
+ 
+	
+\section{Implementation} %Describe the most significant implementation details, focussing on those where unusual or detailed solutions were required. Quote code fragments where necessary, but remember that the full source code will be included as an appendix. Explain how you tested your software (e.g. unit testing) and the extent to which you tested it. If relevant to your project, explain performance issues and how you tackled them.
+This section of the report shall discusses the actual implementation of the traffic simulator system. The section will begin by discussing the initial prototypes that were developed and follow up with the technical discussion of the final implemented system.
+
+\subsection{Prototype implementation and their values to the project}
+This section of the report aims to provide overview of the implementation over the course of the project development, as well as detailed explanation of the critical sections of traffic simulator application in its current version. In addition, the section will also discuss about prototype developments how they aided in forming the current version of the project requirement.
+Prototypes were developed to verify and validate the group's understanding of the system requirement and design, specifically the idea of defining road network into interconnected lines and cars moving along the given lines, before the project moved onto its proper development cycle.
+The prototypes were developed by Jie from the group in Java applet. Ultimately two prototypes were developed, one prototype testing car movements in a simple T Junction, and the other one testing car movements in a road network with a roundabout. Few implementation details that were missing from the groups' understanding were learned from the prototype development, which are explained below in detail. What was learned from the prototypes helped the group to form current requirements of the project, which is explained in detail in the requirement section table Figure ~\pageref{table:RequriementsTable} of this report.
+
+\begin{itemize}
+\item Movement on a roundabout at a constant speed: displacement of the cars along a circle couldn't be dealt with simple displacements in x and y. Instead the angle of the arc the car would have drawn when it would have moved the target distance were first calculated. Then, the angle of the arc was used to rotate the vector between the centre point of the roundabout and the coordinate of the car in question, which were then added to the centre point of the round about to get the new position of the car. This process is illustrated in the figure~\ref{subfig:roundproto} below:
+
+	\begin{figure}[!htb]
+		\centering
+		\subfloat[short for lof][Straight Road]{
+			\setlength{\fboxsep}{0pt}%
+			\setlength{\fboxrule}{1pt}%
+			\fbox{\includegraphics[width=0.5\linewidth]{straightroad}}
+			\label{subfig:straightroad}
+		}
+		\subfloat[short for lof][Roundabout]{
+			\setlength{\fboxsep}{0pt}%
+			\setlength{\fboxrule}{1pt}%
+			\fbox{\includegraphics[width=0.5\linewidth]{roundproto}}
+			\label{subfig:roundproto}
+		}
+		\caption[short for lof]{Prototypes Structure}
+		\label{fig:Prototypes2}
+	\end{figure}
+	
+\item Movement of a car on a straight road was initially thought of as simple addition of car's speed to the car's current coordinate i.e. if car was moving 2 pixels on every update, then that much will be added or subtracted to x or y coordinate by that much at every update, depending on the orientation of the road it is currently on. However it was realized soon after the prototype implementation that this only applies to horizontal or vertical road. To generalise car’s movement on any straight road, the algorithm was changed to find vector between the starting point and end point of the lane the car was currently on, which was then normalized and scaled to the car's target distance, which in the end was added to the car's current coordinate to calculate the new coordinate.\\
+This process is illustrated in the Figure~\ref{subfig:straightroad}, the illustrations of the actual prototype applications see figure~\ref{fig:Prototypes} on page~\pageref{fig:Prototypes}.
+
+ 
+\item Graphical representation of the cars and traffic lights were initially conceived to be rectangles. However, after the prototype implementation, it was decided to represent objects other than roads in circles instead of rectangles to simplify orientation of the objects, as rectangles would require additional calculation to be oriented correctly. 
+\end{itemize}
+
+\subsection{Final Development}
+This section of the report discusses about some of the implementation details that are deemed important to the project. The section is divided into different subsections.
+\subsubsection{Overall Architecture}
+The project was developed in Java, in MVC architecture. This decision was made to separate view related classes and actual entities of the road simulation to be developed at different pace by different programmers, while being able to test the modules separately. Control package of the project holds controller classes that allows communication between the classes of the 'view' packages and 'model' package, so the user can interact with GUI provided by the classes in the 'view' package to adjust the model entities of the project, via controllers. In addition, 'Main' class of the control package is the entry point of the system, which repeatedly calls a method named 'simulate()', as long as the application runs. The 'simulate()' method calls 'update()' method, which orchestrates model updates and graphical representation of the system simultaneously, if the ‘status’ attribute of the simulation world is set as ‘running’. This was to allow simulation to be paused and continue when required.
+\subsubsection{Simulation World(CarWorld class)}
+Car world is a world entity that holds all the entities of the simulation. It has fixed height and width, and holds all the entities in appropriate data structure, to allow easy access to them when they are required. Every entities that are crucial to the world needs to be added in the corresponding data structure of the world to be used in simulation, as well as to the data structure of the object it logically belongs to. This allows faster logical look up of the entities as well as easy access to them for global updates. In case of the car objects, for example, when a car comes into its existence, it will be added to the simulation world object, but the same car will also exist in a data structure of the lane it is currently on. When the system updates for the next frame, it will iterate through the entire list of the cars that currently exist in the simulation, while a car would iterate through the cars that are currently in the data structure that belongs to the lane it is currently on to figure out the car that is right in front of it
+ In addition to the required entities for the simulation, including cars, roads, lights, and car parks, the simulation world object holds an object of a 'QuadTree'. ‘QuadTree’ receives all the cars in the simulation world and recursively divides the world into four quadrant when more than certain numbers of cars enter the tree. After all of the cars have been entered the tree, each car is checked for collision against the cars that are in the same quadrant with the car in question, instead of checking against the all of the cars, reducing time complexity of the collision detection.
+\subsubsection{Road}
+Road in the current system is considered as an object that encapsulates a group of lanes of the road networks. There are different types of roads in the system; Straight, Roundabout, Curve. However the current implementation only supports straight roads. 
+\textbf{Creating a road}\\
+To create a road and the lanes that belong to the road, a road constructor of the corresponding road type needs to be called. For example to create a straight road, a ‘StraightRoad’ constructor with parameters of two float points indicating start and end of the road to form the base line of the road, an integer to decide number of the lanes that conforms to the direction of the aforementioned base line, an integer to determine the numbers of lanes that go opposite direction of the base line, and the simulation world object it belongs to. Calling the previously mentioned constructor will create a road object that holds specified number of lanes that are parallel to the line that could be defined by connecting two points given as parameters, in a HashMap provided as ‘lanes’ attribute of the class. A characteristic of the group’s simulation system that is worth mentioning regarding creation of roads is how the lanes belonging to are stored in the HashMap. In addition to the unique id assigned to each lanes on their creation, additional integer is assigned to each lanes as a key to the HashMap, as illustrated in Figure~\ref{fig:laneroadnumber} utilization of this design follows below.\\
+\begin{figure}[!htb]
+\centering
+\setlength{\fboxsep}{0pt}%
+\setlength{\fboxrule}{1pt}%
+\fbox{\includegraphics[scale=0.7]{lanecreationroadnumber}}
+\caption{Lane creation and numbering in a road}
+\label{fig:laneroadnumber}
+\end{figure}
+\textbf{Connecting Roads}
+In addition to creating roads, a meaningful traffic simulation would need a functionality to connect different roads together to form a network This is provided as a static method of Road class called 'connectLane()'. After creating the roads, lanes need to be connected manually. ‘connectLane()’ method requires 4 parameters; source road object, lane key of the source lane in the source road object, target road object, lane key of the target lane in the target road object. Lane key assignment mentioned before allows connection of the lanes without having access to the objects explicitly. In addition to the connecting lanes, the 'connectLane()' sets up the traffic light automatically where the connection is formed for the convenience of users. Creation of the road and connections of the created road is illustrated Figure~\ref{subfig:TJunction1} , a code snippet from the WorldController class of 'control' package. The method `setTJunction()' in illustration is called when an user clicks `T Junction' button from the main menu of the GUI. The graphical result of calling the method can be seen in Figure~\ref{subfig:TJunction2}.
+
+	\begin{figure}[!htb]
+		\centering
+		\subfloat[short for lof][T Junction Set-up]{
+			\setlength{\fboxsep}{0pt}%
+			\setlength{\fboxrule}{1pt}%
+			\fbox{\includegraphics[width=0.5\linewidth]{tjunction1}}
+			\label{subfig:TJunction1}
+		}
+		\subfloat[short for lof][T Junction]{
+			\setlength{\fboxsep}{0pt}%
+			\setlength{\fboxrule}{1pt}%
+			\fbox{\includegraphics[width=0.5\linewidth]{tjunction2}}
+			\label{subfig:TJunction2}
+		}
+		\caption[short for lof]{Examples of existing systems}
+		\label{fig:TJunction12}
+	\end{figure}
+	
+
+\subsubsection{TrafficLight}
+Traffic lights are configurable entities of the system. In addition to the automatically added traffic lights from connect lanes, as mentioned in the previous sub section, user can interact with GUI to add additional lights to specific lanes, as well as remove any of the traffic lights.
+Traffic light currently has 3 intervals; initial, red, and green intervals. Initial interval decides the time the traffic light stays in red light before it enters the recurring loop of green and red light of fixed time intervals. For example, if the initial interval of the traffic light is set to 5 seconds, it will stay red for the initial five seconds of the simulation. After the period has passed, it will go into its normal loop of red and green light, as illustrated in 
+
+Figure~\ref{fig:lightintervals}.
+\begin{figure}[!htb]
+\centering
+\setlength{\fboxsep}{0pt}%
+\setlength{\fboxrule}{1pt}%
+\fbox{\includegraphics[scale=0.8]{lightintervals}}
+\caption{Light Intervals}
+\label{fig:lightintervals}
+\end{figure}
+
+This setting makes the traffic light stay red for 1 seconds after the simulation starts -\textgreater green for 5 seconds -\textgreater red for 5 seconds -\textgreater until the simulation ends.\\
+
+Traffic light configuration is a crucial part of the system usage as it gives a value to the system as a simulation. This is discussed in the evaluation section of the report.
+
+\subsubsection{Lane}
+Lanes are the actual objects of the system the cars move on, that belong to road objects of the same type i.e. when a straight road object is created, specified numbers of straight lane objects will be created and stored in the road that has been created. Straight lane, and Connection lane, which is explained in the next subsection, are supported by the current version of the  system. In general any type of lanes implement the Lane super class, making any subclasses implement some methods the system uses in simulation. Some of the crucial methods used in simulation of car movements are listed and explained below.
+\begin{itemize}
+\item \textbf{NextPosition:} this method is an abstract method designed to be implemented differently for each lane subclasses. The method takes Car object that needs to move, distance the car needs to travel, and the distance car has assumed to have travelled so far on  the lane it is currently on, and compute the next position of the Car object in question. As different lanes will need to compute this differently, as mentioned earlier in prototype section, each lane types has their own calculation implementation
+
+\item \textbf{getNextTrafficLight:} the method returns a traffic light that is closest and ahead of the car in question. The method will return null value if there are no traffic lights in the detection range, set to 100 pixels in current system, of the car in question
+
+\item \textbf{GetFrontCar:} the method has same purpose as the getNextTrafficLight function, but instead returns a car object rather than a traffic light object.
+In addition, straight lane holds some attributes that are used to keep traffic network logical. The attributes are;
+
+\item boolean hasPark: indicates whether the straight lane has a car park associated with it or not. Car parks are entities in our system that spawn cars randomly into the simulation. This represents cars coming into the section of road network that is being simulated. 
+
+\item boolean isEnding: this represents exit point of the road network simulated. When car reaches the end point of the lane where this attribute is set to be true, it will be removed from the simulation. It is important to note that any straight lane that is not ending needs to have at least one `ConnectionPoint/ object, or the system currently throws null pointer exception. This is due to the cars in the lane not being able to decide their next moves. The decision making process of 'Car' objects will be explained further in Car subsection.
+\end{itemize}
+
+\textbf{Connection and connection points}\\
+Connection class is a subclass of Lane class. Connections are special lanes that cars can hop on  to make turn and enter other lanes at intersections. `ConnectionPoints' are the objects that belong to lanes that represents entry point for the `Connection' lanes, illustrated in figure~\ref{fig:connectionpoint}. A car will enter its target `Connection' lane when it reaches the coordinate of the `ConnectionPoint' that the target `Connection' object belongs to. \\
+When connectLane() method of Road class is called, connection point is created at the intersection between the lane where the connection starts and the road of the lane where the connection ends. Then a Connection lane is created by computing a cubic Bezier curve with three control points; the coordinate of the ConnectionPoint it belongs to; the intersection of the lanes being connected; and an end point of the connection. End point is located so it would form isosceles triangle when control points are connected. 
+	
+\begin{figure}[!htb]
+\centering
+\setlength{\fboxsep}{0pt}%
+\setlength{\fboxrule}{1pt}%
+\fbox{\includegraphics[scale=0.8]{connectionpoint}}
+\caption{the black dots are control points of the Bezier curve, the blue dot represents a connection point and the red lines represent connections that are encapsulated by the connection point}
+\label{fig:connectionpoint}
+\end{figure}
+
+ Position along cubic Bezier curves can be expressed as the following equation;\\
+ \begin{center}
+ %ISSUEDSDFJSDLKFHSDKJFHSKJAFGBSKAJFGBSJKA
+ \emph{\((x,y)= (x1,y1)*(1-t)^3 b+ (x2,y2)*(1-t)^2*t + (x3,y3)*t^3\))} \\
+ \end{center}
+where \((x1,y1\)), \((x2,y2\)), and \((x3,y3\))are starting, control, and ending points of the bezier curve respectively.
+From the equation above, it can be deduced that t value of 1 means the end point of the curve, while t value of 0 means the starting point the curve. However point computed for t=0.5 does not result into half point of the curve. To solve this issue of non linearity, when a Connection is created, a look up table for mapping of the car's distance travelled to coordination is additionally generated \cite{BCurve}. When a car on a `Connection' lane needs to move for a certain distance, the distance is added to the distance the Car has travelled so far on the lane, and the coordinate mapping for the sum of the distance is found, where the car will move to after the update. In the current implementation of the system  the look up tables hold 1000 entries for 1000 different t values of the parametric equation, ranging between 0 to 1 incrementing by 0.001.
+
+\subsubsection{Car}
+Cars are the agents of the system that travels the road network constructed at the beginning of the simulation. At every update, a car in simulation checks for its surrounding, specifically traffic lights, cars, and distance between its target connection and its coordinate. Each cars then makes decisions based on what they perceive. All of this happens in the 'move()' method of the car class which can be divided into three sections; speed decision, moving, and state change.
+\begin{itemize}
+\item \textbf{Moving:} Moving part simply calls nextPosition()  method of the current lane . Car will take the new position returned from the call and update its 'distanceTravelled' attribute accordingly. Updating 'distanceTravelled' is crucial step of the simulation as it is used to determine which objects are ahead of it.
+
+\item \textbf{State change:} This section of the move() method deals with the lane changes, if it needs to make one. After every move a car makes, it checks if it can get into its target connection, if the car has one. If it is already on a 'Connection' lane, it checks if it can leave the connection, and enter the lane the 'Connection' lane leads to.
+
+\item \textbf{State change:} This section of the move() method deals with the lane changes, if it needs to make one. After every move a car makes, it checks if it can get into its target connection, if the car has one. If it is already on a 'Connection' lane, it checks if it can leave the connection, and enter the lane the 'Connection' lane leads to.
+\end{itemize}
+
+If the car decides to enter a lane, because it has reached its target connection or has been spawned by a 'CarPark' object, it calls a method named 'enterLane()'. The method takes the lane it wishes to move onto as a parameter. If the lane it will move onto does not belong to the 'Road' object the previous lane belongs to, it will additionally invoke a method called 'enterRoad()', after changing the lane it currently belongs to. When 'enterRoad()' method is called, car checks if the road holds any 'Connection' lanes that it could use, as well as if the lane it just entered has an exit point. It chooses one of them randomly, deciding the cars next plan. As mentioned before in 'Lane' implementation subsection of the report, if it can't find any connections belonging to the road nor an exit point on the lane it has just entered, a NullPointerException will be thrown. It is also important to note that the 'Connection' lanes in the system are considered to belong in the same road of the lane where the connection starts, therefore the decision making step related to 'enterRoad()' method will not be happening in this case. However when the car leaves a 'Connection' and enters the lane the 'Connection' leads to, 'enterLane()' method as well as 'enterRoad()' will be invoked.
+
+
+\subsubsection{View}        
+\begin{itemize}[noitemsep]
+\item \textbf{CarsimView} is the main view of this system, the constructer method to create the view gets all of the controllers instances (worldController, trafficlightController and carParkController) in our system. There are several methods to set the current showing view. For example, mainMenu() method would add mainMenu view into the container and HelpPanel() method would add HelpPanel into the container. 
+ 
+\item \textbf{ConsolePanel} is the console view which allows users to interact with our system. Console buttons such as startButton, stopButton, or addTrafficLightBtton would be created inside this view.To capture users' click on these buttons, ConsolePanel implements ActionListener. If one of the buttons has been clicked, method actionPerformed() would capture it and invoke the corresponding controller. Beside buttons, one JSlider is used to change the car spawn rate, which has a ChangeListener to get current changing of the slider. A line chart graph is shown below the slider to illustrate average car speed.  
+ 
+\item \textbf{DynamicChart} is used to create a line chart graph in order to show the dynamic changes of cars' average speed. In order to illustrate the overall cars average speed clearly and directly, our application implements the JFreeChart~\cite{FreeChart} library to draw the Line Chart, because this is an external the programmers had to import the library into the whole project. After importing external library, the programmers created this class to encapsulate methods and variables for drawing chart. The constructor method would  invoke createChart method to create a specific chart with several parameters(X axis, Y axis, and initial data etc). 
+There are two methods are required to implement the graph, firstly, construct method to state the basic attributes of the Line Chart (i.e. the X axis , Y axis or the background colour) and second is the method updateData(), which would be invoked by the main time controller (per 20ms) to update the data of the chart.
+ 
+\item \textbf{MainMenu} is the first view to be shown to users. There are three buttons to present the core functionalities: T Junction, Intersection and Full Simulation. These three buttons have been added ActionListener to capture click and execute corresponding operations. 
+ 
+\item \textbf{SimulationPanel} is the only view to simulate the traffic. Cars, roads and traffic lights would be painted on this view by invoking method paintComponent(). In this method a for loop is used to get all of objects and call the inside paint method to draw it. Add MouseListener to  this Panel, since users could check and change one specfic traffic light details or even remove it. 
+ 
+\item \textbf{TrafficLightPanel} is the view for users to  interact with traffic lights. The constructer method would get one parameter called id to decide whether show all of the traffic lights or show one specific traffic light. If that id is 0, this view would list details of  traffic lights (i.e. ids or three intervals). If that id is not 0, that means the id is also the traffic light's id. Hence, this view would only show this traffic light id rather than all of lights. Intervals would be shown as inside the JTextField. Users are allowed to change any of the intervals by inputting positive numbers into the text-field and click the submit button to save those changes. Users also can remove one specific traffic or remove all of traffic lights by clicking remove button.  
+ 
+\item \textbf{CustomJButton} extends JButton, to modify the basic appearance of JButton. In our system, buttons would be created by using new CustomJButton() instead of the default Java Swing JButton. 
+ 
+\item \textbf{LightButton} is one special button class extends CustomJButton. In the system it is prorammed that this kind of button is only used when the TrafficLightPanel is showing submitButton and removeButton. Since when users need to submit changes or remove traffic lights, the button must be reflected with that exact traffic light. Hence, the group created this LightButton to add traffic light id inside it. Then after clicking any of those buttons, the operations would be happening on the exact corresponding traffic light. 
+ 
+\item \textbf{UserHelpPanel} is the helping instruction for users to know more about our system. This panel would be shown after users click the Help Button on the console panel, information on traffic lights and  is detailed here. 
+\end{itemize}
+
+\subsubsection{Controller}
+        
+\begin{itemize}[noitemsep]
+\item \textbf{Main} is the first accessing file of our system. All of the controllers (i.e. WorldController, ParkController and TrafficLightController )would be created and initialized here. Beside controllers, the main View of our system CarSimView also needs to be initialized in main() method to prepare for the initial showing view.
+
+\item \textbf{WorldController} is the main system controller if we regard the whole system as a world. In this controller, there are three values to present the current status: "running" means system is operating now, "paused" means system is stoped currently and "exit" means system has been terminated. During the "running" status, time mechanism has been made by using Thread.sleep(). The system would refresh once every 20 ms. Update method in this controller is tried to gain all of the objects lists in our system. For example, this method would be executed every 20 ms to fetch all of car objects, road objects and traffic light objects. There are also three controlling methods to set the current situation (TJunction, Intersection or FullSimulation) which would be invoked if users click the cooresponding button on the mainView Page.
+
+\item \textbf{TrafficLightController} is the controller to control all of operations among the traffic light objects. Any relevant method of traffic light would be inside this controller. There is a method setInterval() which requires three parameters(color, interval and id) to allow users change the interval of any color of one specific traffic light. Methods removeLight() and addNewLight() provide functionality of adding new light or remove one specific traffic light.
+
+\item \textbf{ParkController} is the controller to control the spawn rate of car parks by using method setSpawnChance() allows system get all of car park lists and set their spawn rates by passing argument.
+\end{itemize}
+Overall, the above section has been able to demonstrate all the technical steps taken by the group in the creation of the simulation. 
+	
+\subsection{System Changes}
+\begin{enumerate}[noitemsep]
+	\item Removal of BFS car searching 
+	\item Road Cars
+	\item No Roundabout 
+	\item No Car Park Spawn (could be future work) 
+	\item No overtaking
+\end{enumerate}
+
+\section{Team Work}
+%Describe how you worked together, including the tools and processes you used to facilitate group work. 
+This section shall outline how each member contributed to the project and the workload division among the members. Team organisation was essential to the success of the project and was an aspect enforced by the project coordinator. After initially planning and gathering a general understanding of the project expectations the group had discussions about the roles needed of each member and how they could contribute based on their individual skill set. This lead to the group being split into two sub-teams, the first team were the programmers, Inyeol and Jie as they were the most experienced and comfortable programmers. Jie developed prototypes which Inyeol would then transform into object orientated programming, this process worked well because as prototypes were developed quickly they were presented to all team members who were kept up to date with the progress of the implementation of the system and therefore be able contribute ideas and opinions on alterations when need be.\\
+The second team was Qiu and Mark working as system analysts in charge of documentation and research. Tanda as project coordinator worked to ensure that these two teams although separate would remain in constant communication during meetings or on-line, aimed to ensure that system analysts would always know the progress of the programmers and with this be able to understand what the programmers are doing to write the final report.  Qiu although having no programming experience, was great in understanding the mathematical complexities behind road development and would actively help programmers with such complexities. Mark had good knowledge of the UK road system contributing ideas and helping form the aim of the project. 
+
+
+\subsection{Work Load Division:}
+The group was divided into two sub-teams, one focused on implementation and the second focused on analysis and documentation, between these two sub-teams, members divided the work load between them.\\ 
+Within the programming team, Jie was in charge of the initial prototype developments of the system and presenting them to the group for analysis at each meeting and Inyeol was in-charge of transforming these prototypes into actual Java objects for final implementation. Road development was the groups major concern therefore it was prioritized, by implementing a prototypes quickly analysing them as a group for them to be developed into the final system. Inyeol was lead programmer, Jie and Tanda worked together during the final stages of development of the graphical user interface.
+After the initial report had been submitted and the final implementation begun Mark, Qiu and Tanda focused on completing the the final report and ensuring it included all the necessary information based on the specified guidelines. The project coordinator designated sections of the report were given to Mark and Qiu to complete. \\
+A number of tools and processes were used to facilitate the way the group worked together as a team. For general communication between team members a Facebook group was set-up for the members to post any useful information, updates and comment on others progress. Tanda as group coordinator would publish reminders and alerts on the Facebook group, this was used a lot throughout the entire project. The tools the group used to collaborate while implementing the system was Github. All the members created accounts and when they had something to contribute towards the main repository they would do a pull request. This tool was dominantly used by the programming and the group coordinator who would be uploading material on Github. 
+Documentation was done using Latex using the TexStudio software as a platform to support. Tanda was in charge of creating and adding contributions from all team members to the .tex document. Despite having no knowledge of LaTex prior the project the benefits of the typesetting language were seen significantly, in terms of the flexibility and ease of putting the report together.
+\\
+Overall this section has given evidence of the contribution of each member of the group and showed how and the tools used to work together to complete the project. 
+	
+\section{Evaluation} %Critically evaluate your project: what worked well, and what didn’t? how did you do relative to your plan? what changes were the result of improved thinking and what changes were forced upon you? how did your team work together? etc. Note that you need to show that you understand the weaknesses in your work as well as its strengths. You may wish to identify relevant future work that could be done on your project.
+\begin{enumerate}
+	\item \textbf{Road development:} The group built a road and lane model as objects which is not too complex to reuse and extend to form networks of interchangeable roads. However the one of the requirements we have identified, allowing simulation on different types of roads, is partially met since it cannot have roundabouts nor curved roads. This could be one of the more important future works of the project since it would increase its capability to have other types of  road networks in real life network, but also the verification that the design of the program can work with multiple types of the roads. Although the project application was designed to have multiple types of roads at some point in future, it was never tested together in a network.
+	
+	\item \textbf{Traffic light development:} The traffic light model serves its purpose. Three light intervals are configurable to study traffic light configurations that prevents accidents and study its performance. The system is also capable of adding and removing traffic lights dynamically during the simulation. However yellow light could be added to the model as well as different types of lights, such allowing cars to make turns.
+	
+	\item \textbf{Car movement:} Cars can move somewhat looking naturally. But speed decision algorithm could definitely use an improvement, as well as the physics of acceleration and deceleration. Even though the group was able to find resources regarding physics of car movements, implementing the system of such accuracy were found to be out of the projects scope. In addition current car's perception capability is quite limited.
+	
+	\item User Interfaces have been designed with multiple components to allow users to interact with our system, such as adjusting number of cars that comes into the network, interval of traffic light. GUI also provides average speed of the cars to show the performance of the current configuration of the road. However different types of statistics could be provided to increase the value of the simulations. In addition, as road construction capability is designed in easily reusable/configurable manner, developing a GUI allowing construction and manipulation of a road network should be possible. This could the next work to be done in view related modules of the system
+	
+	\item Lack of extensive unit testing and assessment of quality of code 
+\end{enumerate}
+
+\subsection{Testing} 
+%Explain how you tested your software (e.g. unit testing) and the extent to which you tested it. If relevant to your project, explain performance issues and how you tackled them.
+To test the software the group used the Black Box testing technique in order to examine the systems functionality from the perspective of a user, this method does not require any programming or internal implementation knowledge. This analysis can point out issues missed out by the programmers. Therefore the system analysts of the group were told to use this method to test the system as general designers without the assumptions taken by the programmers who understand its internal technicality.\\
+Table~\ref{table:TestingTable} illustrates the bugs that were found within the system during black box testing tested by a random user and the team:
+\begin{center}
+	\begin{table}[!htb]
+	\begin{tabular}{|m{7cm}|m{7cm}|}
+		 \hline
+		\multicolumn{2}{ |>{\columncolor[gray]{0.8}}c|}{\textbf{Black Box Testing}} \\ 
+		\hline 
+		 \centering \textbf{Bug} & \textbf{Fixed?} (if not why)\\\hline
+		 After car collision, sometimes all cars are not removed from the screen.& Fixed, remove all of cars from arrayList after detecting collision except the two cars in the collision \\  \hline
+		 After adding a traffic light there screen is painted back badly & Fixed, the carSimView needs to be repaint and revalidate after any changes on it\\  \hline
+		 After removing one traffic light, the other traffic lights are presented to the user & Fixed, Simple correction, for loop to create the other traffic light was being called after the user removed a traffic light.\\  \hline
+		 JLabel's  background cannot been changed using JLabel.setBackground() method& Fixed, the component background is fixed inside another panel, needs to use component.setOpaque(true) first, and then change the background color \\  \hline
+		 The help return button, returns to the main menu instead of returning to the current simulation& Fixed, after clicking button, return a right target view.\\  \hline
+		GridLayout columns width can't be fixed, it would automatically filled the space based on the size of component inside it & Not Fixed. Since GridLayout has been designed to automatically fill the item space according to the size of inner component. So we change another Layout
+\\  \hline
+		The data of Line Chart  graph cannot be dynamically generated&Fixed. Create a inner update method to fetch dynamic data which would be invoked by system time updating mechanism \\  \hline
+		Using TextField to get current changing data directly by documentListener& Fixed. It's hard to directly get the latest changed data. Hence the submit button was added with a actionListener to capture the click and invoke operations which should be executed. \\  \hline
+	\end{tabular}
+	\caption{Testing Table}
+		\label{table:TestingTable}
+	\end{table}
+\end{center}
+
+\subsection{Lessons Learned and Challenges} 
+This section address number of lessons that have been learnt throughout the project not only developing the actual traffic simulation system but working together as a team.\\
+Implementing a system as a group is a hard task, the collaborative development aspect on Github is an effective mechanism when used correctly. During the initial stages of the project using Github was fine however, towards the later half of the project we had some challenges with it when crucial collaborative programming occurred between Jie, Inyeol and Tanda the unfamiliarity with the software resulted in code being lost or merges being unsuccessful. As the programmers attempted to implement the system together there needed to be better and more active communication between each other to ensure that changes made by one person were known by the other, or documented properly. 
+\\As a result of the issues with Github the programming team did end up communicating more about what they were adding to the program to then notify Inyeol to merge the code explaining what they had done. Despite this being a weakness it resulted in better communication between the programmers. Therefore we acknowledge that within out github log there is alot missing which is due to us simply working together and using Inyeols Github until the day of completion.
+As a team we should have sat down together and practised more on how to use the tools it offers to avoid face critical errors towards to deadline of the project. 
+Another slight weakness we learnt is that having just two main programmers was a lot of work load on them, however this was because some members had limited to no knowledge of programming otherwise there could have been more development done towards the program.\\
+
+%How did you do relative to your plan?
+At the start of the project we were focused on using the Agile development process as it is the most popular development process and it widely recognised in industry. This method really helped the group to identify and handle the project risks. Initially the group created a project plan based on Agile but after the initial report feedback the group re-evaluated the aims of the project and created a simpler Gantt Chart which we felt identified the number of deadlines and tasks. Therefore instead of an Agile approach we began a more Extreme Programming software development methodology which is a type of Agile software development however focuses on quick releases of software to improve on and includes elements such as 'programming in pairs', where programmers actively engage \textit{'with the task throughout a paired session, otherwise no benefit can be expect'} \cite{Risk}, which we found was completely true in terms of group work. Therefore relative to our initial plan we still focused on programming the most high risk crucial model back end which meant that the hardest parts were dealt with first. Overall, despite altering out agile development approach to more extreme programming the principle of programming quickly to analyse and improve was the best lesson learnt in such a project which has a strict time constraint. 
+
+\subsubsection{Group Work Lessons Learned:} %What we learnt about group work and working together
+The most significant lesson learnt throughout this project has been the important of communication, these skills within a team are critical for success. At times, this became a significant weakness for the team, despite having two weekly group meetings which were great, between these designated meetings there was a lack of communication which lead to some delay in progression as some team members had nothing to do or some went off track without understanding correctly what was to be done. Despite each member having a defined role and tasks given each week, there needed to be a lot more communication between all members to ensure that there was a consistent understanding of what each member was doing and how there can be active collaboration between the members at all times not just during team meetings. \\ If a member felt lost or unsure of what they were doing, they should have spoken up rather than just wait eventually till team coordinator found out. 
+\\ Towards the end of the project once the project coordinator identified this issue the team came together more and communication with each other was much better and we worked together very well. Tanda as team coordinate realised that despite communicating effectively with each member individually, she needed to ensure that each member in the team was communicating the same with each other. \\
+
+Overall, this section has detailed how the group worked together in terms of program development and in general as a team. As a whole we believe the key lesson learnt from this project has been the importance of communication and being unified, which not only ensures stronger relationships are built among the team members but we are all on the same page.	
+	
+\subsection{Future Work} %How the project could be extended
+	Although early version of the models and views were tested modularly, in connection with controllers no extensive unit testing suites were created, as we have felt no need test views and models separately anymore after they were connected together. In addition early simple model tests do not work currently since the application has gone through many design changes, after the group started to test them with views. Additional future works: In addition, quality of code needs to be assessed more thoroughly and be improved, especially in methods related creating lane connection.  
+	
+\subsection{Peer Assessment}
+	%In a simple table, allocate the 100 ‘points’ you are given to each team member. Valid values range from 0 to 100 inclusive. You may assign decimal values, but the entire points must add up to precisely 100. As stated at the beginning of the project, when awarding points to each member it would based on contribution, ...below is the grade table for each member totalling up to 100. 
+As stated in the initial report peer assessment would be based on how much each team member was able to contribute based on their individual skills.	
+\begin{center}
+	\begin{tabular}[!htb]{|m{4cm}||m{0.9cm}|}
+		\hline
+		\multicolumn{2}{|>{\columncolor[gray]{0.8}}c|}{ \textbf{Peer Assessment Grades}} \\  \hline
+		Mark Azer & 20\\  \hline
+		Jie Ding & 20 \\  \hline
+		Tanda Kabanda & 20 \\  \hline
+		Inyeol Sohn & 20 \\  \hline
+		Qui Yun & 20\\  \hline
+		& 100\\  \hline
+	\end{tabular}
+\end{center}	
+\newpage
+
+\section{References}
+\begin{thebibliography}{5}
+
+\bibitem{Risk}Agile Alliance and Institut Agile.(2013). Available: http://guide.agilealliance.org/guide/pairing.html. Last Accessed: 24 March 2015
+
+\bibitem{TransM}Caliper Corporation.(2015) \emph{TransModeler Overview}
+Available: http://www.caliper.com/transmodeler/. Last accessed 25 March 2015.
+
+\bibitem{Kelly}Liu, Kelly.(1996) \emph{Traffic Simulation} Available:
+http://www.phy.ntnu.edu.tw/oldjava/
+//Others/trafficSimulation/applet.html. 
+Last accessed 25 March 2015.
+
+\bibitem{BCurve} Kamermans, Mike "Pomax".(2014) \emph{A Primer on Bézier Curves} Available: http://pomax.github.io/bezierinfo/\#tracing Last Accessed: 25th March 2015
+
+\textbf{Source Code Reference:}
+\bibitem{FreeChart} JFreeChart \emph{JFreeChart} Available: http://www.jfree.org/jfreechart/ Last Accessed: 25th March 2015
+
+\bibitem{Return} Java2s \emph{Returns closest point on segment to point : Geometry « 2D Graphics GUI « Java} Available: http://www.java2s.com/Code/Java/2D-Graphics-GUI/Returnsclosestpointonsegmenttopoint.htm Last Accessed: 25th March 2015
+
+\bibitem{QuadT} Tuts+ (2015) \emph{Quick Tip: Use Quadtrees to Detect Likely Collisions in 2D Space} Available: http://gamedevelopment.tutsplus.com/tutorials/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space--gamedev-374 Last Accessed: 25th March 2015
+
+
+\end{thebibliography}
+	
+\newgeometry{left=0.5cm, top=1.5cm}
+\section{Appendices} % ALL THE EXTRA STUFF.
+
+\subsection{Project Risk Table}
+\begin{tabular}[!htb]{|p{3.75cm}|p{3cm}|p{3cm}|p{8cm}|}
+\hline
+\multicolumn{4}{ |>{\columncolor[gray]{0.8}}c|}{\textbf{Project Risk Table}} \\ 
+\hline 
+\textbf{Risk Description} & \textbf{Likelihood of Occurrence Risk Level} & \textbf{Potential Risk Level Impact on Project} & \textbf{Prevention}\\ \hline 
+
+Missing meetings & High & Medium & If a group meeting is missed by any member read the minutes and be in contact via email to know what task is expected. \\ \hline
+
+Team member gets ill & High & Low & If a team member if ill its pardoned they need to make sure when they feel better get work to get back update and other group members should keep them involved. \\ \hline
+
+Team member dropping out & Low & High & Any disagreements should be address to avoid disruptions between members. \\ \hline
+
+Poor Project Management & High & High & Project coordinator make sure that member is on track and based on the plan ensure the group is on track and if not address the issue.\\ \hline
+
+Missing Deadlines & Medium & High & Make sure deadlines are clearly stated and each member knows when they are. As well as ensure that there is always contingency time in-case work load becomes heavy towards deadline\\ \hline
+
+Misunderstanding of Tasks & High & Medium &  Address issue with team members at next meeting no matter how small the misunderstanding\\ \hline
+
+Lack of Communication Between Team& Medium & High & Despite having two team meetings a week continue to be in conversation via Facebook/Email \\ \hline
+
+Uneven Distribution of Tasks between team members& High & Medium & Make sure each team member is comfortable with the tasks given, If not within a group 
+meeting raise concern.\\ \hline
+
+Task Targets Unclear & Medium & Medium & At each meeting make sure the targets are clear.\\ \hline
+
+Drastic Change To Scope& Medium& High & If drastic changes need to be made ensure that they are feasible.\\ \hline
+\end{tabular}
+
+\subsection{Class Diagrams}
+\begin{center}
+\includegraphics[scale=0.4]{ClassDiagram_Model}\\
+
+
+\includegraphics[scale=0.35]{ClassDiagram_View}\\
+
+
+\includegraphics[scale=0.6]{ClassDiagram_Controller}\\
+
+\end{center}
+
+%END CLASS DIAGRAMS
+\subsection{Package Diagram}
+\includegraphics[scale=0.4]{PackageDiagram}
+%END PACKAGE DIAGRAM
+\restoregeometry
+
+\newgeometry{right=0.5cm, left=0.5cm}
+\subsection{Live Application}
+
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[scale=0.185]{MainMenu}
+\includegraphics[scale=0.185]{TJunction}
+
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[scale=0.185]{Intersection}
+\includegraphics[scale=0.185]{FullSimulation}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[scale=0.185]{AdjustTrafficLight}
+\includegraphics[scale=0.185]{AddTrafficLight}
+
+\end{figure}
+
+
+\restoregeometry
+
+\subsection{Gantt Chart}
+\begin{figure}[[!htb]
+	\setlength\fboxsep{0pt}
+	\setlength\fboxrule{1pt}
+	\fbox{\includegraphics[width=17cm, height = 12cm,angle=90]{GanttChart}}
+	\caption{Gantt Chart}
+	\label{fig:GanttChart}
+\end{figure}
+\newpage
+\subsection{Prototypes}
+	\begin{figure}[!htb]
+		\centering
+		\subfloat[short for lof][T Junction Prototype]{
+			\setlength{\fboxsep}{0pt}%
+			\setlength{\fboxrule}{1pt}%
+			\fbox{\includegraphics[width=0.45\linewidth]{junction_img}}
+			\label{subfig:junctionproto}
+		}
+		\subfloat[short for lof][Roundabout Prototype]{
+			\setlength{\fboxsep}{0pt}%
+			\setlength{\fboxrule}{1pt}%
+			\fbox{\includegraphics[width=0.45\linewidth]{roundaprototype_img}}
+			\label{subfig:roundproto_img}
+		}
+		\caption[short for lof]{Prototypes Created}
+		\label{fig:Prototypes}
+	\end{figure}
+	
+\end{document} %END OF REPORT
